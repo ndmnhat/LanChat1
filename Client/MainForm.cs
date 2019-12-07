@@ -13,11 +13,16 @@ namespace Client
 {
     public partial class MainForm : Form
     {
+        string serverip;
         public MainForm()
         {
             InitializeComponent();
         }
-
+        public MainForm(string svip)
+        {
+            InitializeComponent();
+            serverip = svip;
+        }
         private void ptbClose_MouseEnter(object sender, EventArgs e)
         {
             this.ptbClose.BackColor = Color.FromArgb(207, 207, 207);

@@ -8,10 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Net.Sockets;
+using System.Net;
+using Packet;
 namespace Client
 {
     public partial class LoginForm : Form
     {
+        string localIP = getlocalIP();
+        int localPort = 52053;
         public LoginForm()
         {
             InitializeComponent();
@@ -35,10 +40,45 @@ namespace Client
 
         private void button1_MouseClick(object sender, MouseEventArgs e)
         {
-            this.Hide();
-            MainForm main = new MainForm();
-            main.ShowDialog();
-            this.Close();
+            SocketPacket packet = new SocketPacket(PacketType.REQCON, localIP, txbserverip.Text, localPort, 52052,txbName.Text);
+            try
+            {
+                TcpClient client = new TcpClient(txbserverip.Text, 52052);
+                byte[] data = SocketPacket.SerializedItem(packet);
+                NetworkStream stream = client.GetStream();
+                stream.Write(data, 0, data.Length);
+                byte[] response = new byte[1024];
+                int length = stream.Read(response, 0, 1024);
+                SocketPacket returnpacket = SocketPacket.DeSerializedItem(response);
+                stream.Close();
+                client.Close();
+                if (returnpacket.Message=="OK") //Kiem tra ten ton tai
+                {
+                    MainForm main = new MainForm(txbserverip.Text);
+                    main.ShowDialog();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Try again");
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                return;
+            }
+        }
+        public static string getlocalIP()
+        {
+            string localIP;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            return localIP;
         }
     }
 }
