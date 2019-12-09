@@ -42,7 +42,7 @@ namespace Client
 
         private void button1_MouseClick(object sender, MouseEventArgs e)
         {
-            this.Visible = false;
+            //this.Visible = false;
 
             SocketPacket packet = new SocketPacket(PacketType.REQCON, localIP, txbserverip.Text, 52052, 52054,txbName.Text);
             SocketPacket returnpacket = DataTranferer.SendAndReceive(txbserverip.Text, 52054, packet);
