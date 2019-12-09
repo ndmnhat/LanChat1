@@ -9,7 +9,8 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 namespace Packet
 {
-    public class SocketPacket
+    [Serializable]
+    public class SocketPacket : ISerializable
     {
         public PacketType packetType { get; set; }
         public string SenderIP { get; set; }
@@ -27,7 +28,7 @@ namespace Packet
             SenderPort = 0;
             ReceiverPort = 0;
             Message = "";
-            image = new Bitmap(0, 0);
+            image = new Bitmap(1, 1);
         }
         /// <summary>
         /// Initialize a message packet
@@ -83,9 +84,11 @@ namespace Packet
         }
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("PacketType", packetType, typeof(PacketType));
             switch(packetType)
             {
                 case PacketType.MESSAGE:case PacketType.REQCON:
+                case PacketType.REQFRIEND:
                     info.AddValue("Msg", Message, typeof(string));
                     break;
                 case PacketType.IMG:
@@ -101,6 +104,7 @@ namespace Packet
         }
         public SocketPacket(SerializationInfo info, StreamingContext context)
         {
+            packetType = (PacketType)info.GetValue("PacketType", typeof(PacketType));
             SenderIP = (string)info.GetValue("SenderIP", typeof(string));
             ReceiverIP = (string)info.GetValue("ReceiverIP", typeof(string));
             SenderPort = (int)info.GetValue("SenderPort", typeof(int));
@@ -108,6 +112,7 @@ namespace Packet
             switch (packetType)
             {
                 case PacketType.MESSAGE: case PacketType.REQCON:
+                case PacketType.REQFRIEND:
                     Message = (string)info.GetValue("Msg", typeof(string));
                     break;
                 case PacketType.IMG:
@@ -136,6 +141,7 @@ namespace Packet
         public override string ToString()
         {
             string st = "From IP :" + SenderIP + " To IP:" + ReceiverIP;
+            return st;
         }
     }
     public enum PacketType
@@ -144,6 +150,7 @@ namespace Packet
         REQFRIEND,
         MESSAGE,
         IMG,
+        DISCON,
         NONE
     }
 }

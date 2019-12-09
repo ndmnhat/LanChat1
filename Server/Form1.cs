@@ -18,7 +18,9 @@ namespace Server
 {
     public partial class Form1 : Form
     {
-        TcpListener server;
+        UdpClient server;
+        UdpClient sendserver;
+        BUS_users UsersBUS = new BUS_users();
         public Form1()
         {
             InitializeComponent();
@@ -27,7 +29,7 @@ namespace Server
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            ThreadStart threadstart1 = new ThreadStart(Listen);
+            ThreadStart threadstart1 = new ThreadStart(ReceiveAndRespond);
             Thread thread = new Thread(threadstart1);
             thread.IsBackground = true;
             thread.Start();
@@ -46,25 +48,23 @@ namespace Server
 
         private void button2_Click(object sender, EventArgs e)
         {
-            server.Stop();
+            server.Close();
+            sendserver.Close();
         }
-        private void Listen()
+        private void ReceiveAndRespond()
         {
-            server = new TcpListener(IPAddress.Parse(getlocalIP()),52052);
-            server.Start();
+            server = new UdpClient(52054);
+            sendserver = new UdpClient(52051);
+            IPEndPoint iPEnd = new IPEndPoint(IPAddress.Any,52052);
             try
             {
                 //IPEndPoint IPE = new IPEndPoint(IPAddress.Any, 52052);
                 while (true)
                 {
-                    TcpClient client = server.AcceptTcpClient();
-                    NetworkStream stream = client.GetStream();
-                    //CopyTo a memorystream to create a automatically-sized buffer
-                    MemoryStream ms = new MemoryStream();
-                    stream.CopyTo(ms);
-                    byte[] data = ms.ToArray();
-                    SocketPacket packet = SocketPacket.DeSerializedItem(data);
-                    label2.Text = packet.ToString();
+                    byte[] data = server.Receive(ref iPEnd);
+                    SocketPacket packet = new SocketPacket();
+                    packet = SocketPacket.DeSerializedItem(data);
+                    label2.Text = packet.Message;
                     ProcessPacket(packet);
                 }
             }
@@ -75,10 +75,44 @@ namespace Server
         }
         public void ProcessPacket(SocketPacket packet)
         {
+            SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             switch(packet.packetType)
             {
                 case PacketType.REQCON:
+                    if(!UsersBUS.isUsersHave("username",packet.Message))
+                        UsersBUS.InsertUsers(new DTO_users(0, packet.Message, true, packet.SenderIP));
+                    else
+                        UsersBUS.UpdateUsers(new DTO_users(UsersBUS.GetUsersID("username",packet.Message)[0], packet.Message, true, packet.SenderIP));
+                    response.packetType = PacketType.MESSAGE;
+                    response.Message = "OK";
+                    byte[] data = SocketPacket.SerializedItem(response);
+                    server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
                     break;
+                case PacketType.DISCON:
+                    UsersBUS.UpdateUsers(UsersBUS.GetUsersID("usersip", packet.SenderIP)[0], "userstatus", false);
+                    goto case PacketType.REQFRIEND;
+                case PacketType.REQFRIEND:
+                    string onlinefriend = "";
+                    int userncount = UsersBUS.GetUsersLength("userstatus",true);
+                    DataTable table = UsersBUS.GetUsersWith("userstatus", true);
+                    onlinefriend += userncount.ToString() + "\n";
+                    for(int i = 0; i < userncount; i++)
+                    {
+                        onlinefriend += string.Format("{0}:{1}\n", table.Rows[i].Field<string>("username"), table.Rows[i].Field<string>("userip"));
+                    }
+                    response.SenderPort = 52051;
+                    response.ReceiverPort = 52053;
+                    response.packetType = PacketType.REQFRIEND;
+                    response.Message = onlinefriend;
+                    byte[] data2 = SocketPacket.SerializedItem(response);
+                    for (int i = 0; i < userncount; i++)
+                    {
+                        string rip = table.Rows[i].Field<string>("userip");
+                        response.ReceiverIP = rip;
+                        sendserver.Send(data2, data2.Length, new IPEndPoint(IPAddress.Parse(rip), 52053));
+                    }
+                    break;
+                default:break;
             }
         }
     }

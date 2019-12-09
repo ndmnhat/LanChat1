@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL_LanChat", "DAL_LanChat\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BUS_LanChat", "BUS_LanChat\BUS_LanChat.csproj", "{9622930A-2F53-464A-8B04-71FCA3B0B041}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{9DFD53CC-268E-4227-9EE9-D2755AB2783B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{9622930A-2F53-464A-8B04-71FCA3B0B041}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9622930A-2F53-464A-8B04-71FCA3B0B041}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9622930A-2F53-464A-8B04-71FCA3B0B041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DFD53CC-268E-4227-9EE9-D2755AB2783B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DFD53CC-268E-4227-9EE9-D2755AB2783B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DFD53CC-268E-4227-9EE9-D2755AB2783B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DFD53CC-268E-4227-9EE9-D2755AB2783B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

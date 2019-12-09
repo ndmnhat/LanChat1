@@ -11,12 +11,13 @@ using System.Runtime.InteropServices;
 using System.Net.Sockets;
 using System.Net;
 using Packet;
+using Networking;
 namespace Client
 {
     public partial class LoginForm : Form
     {
+        TcpClient client;
         string localIP = getlocalIP();
-        int localPort = 52053;
         public LoginForm()
         {
             InitializeComponent();
@@ -35,38 +36,25 @@ namespace Client
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
+
             this.Close();
         }
 
         private void button1_MouseClick(object sender, MouseEventArgs e)
         {
-            SocketPacket packet = new SocketPacket(PacketType.REQCON, localIP, txbserverip.Text, localPort, 52052,txbName.Text);
-            try
+            this.Visible = false;
+
+            SocketPacket packet = new SocketPacket(PacketType.REQCON, localIP, txbserverip.Text, 52052, 52054,txbName.Text);
+            SocketPacket returnpacket = DataTranferer.SendAndReceive(txbserverip.Text, 52054, packet);
+            if (returnpacket.Message == "OK")
             {
-                TcpClient client = new TcpClient(txbserverip.Text, 52052);
-                byte[] data = SocketPacket.SerializedItem(packet);
-                NetworkStream stream = client.GetStream();
-                stream.Write(data, 0, data.Length);
-                byte[] response = new byte[1024];
-                int length = stream.Read(response, 0, 1024);
-                SocketPacket returnpacket = SocketPacket.DeSerializedItem(response);
-                stream.Close();
-                client.Close();
-                if (returnpacket.Message=="OK") //Kiem tra ten ton tai
-                {
-                    MainForm main = new MainForm(txbserverip.Text);
-                    main.ShowDialog();
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show("Try again");
-                }
+                MainForm main = new MainForm(txbserverip.Text,txbName.Text);
+                main.ShowDialog();
+                this.Close();
             }
-            catch (Exception exception)
+            else
             {
-                MessageBox.Show(exception.Message);
-                return;
+                MessageBox.Show(returnpacket.Message);
             }
         }
         public static string getlocalIP()

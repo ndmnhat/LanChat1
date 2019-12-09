@@ -23,10 +23,9 @@ namespace DAL_LanChat
         {
             conn.Open();
             DataTable table = new DataTable();
-            string sql = "SELECT * FROM users WHERE @Attribute = @value";
+            string sql = "SELECT * FROM users WHERE "+ Attribute +" = @value";
             using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
             {
-                sqlCmd.Parameters.AddWithValue("@Attribute", Attribute);
                 sqlCmd.Parameters.AddWithValue("@value", value);
                 using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCmd))
                 {
@@ -39,11 +38,12 @@ namespace DAL_LanChat
         public void InsertUsers(DTO_users user)
         {
             conn.Open();
-            string sql = "INSERT INTO (username,userstatus) users VALUES (@username,@userstatus)";
+            string sql = "INSERT INTO users (username,userstatus,userip) VALUES (@username,@userstatus,@userip)";
             using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@username", user.username);
                 sqlCmd.Parameters.AddWithValue("@userstatus", user.userstatus);
+                sqlCmd.Parameters.AddWithValue("@userip", user.userip);
                 sqlCmd.ExecuteNonQuery();
             }
             conn.Close();
@@ -51,11 +51,12 @@ namespace DAL_LanChat
         public void UpdateUsers(DTO_users user)
         {
             conn.Open();
-            string sql = "UPDATE users SET username = @username, userstatus = @userstatus WHERE userid = @userid";
+            string sql = "UPDATE users SET username = @username, userstatus = @userstatus, userip = @userip WHERE userid = @userid";
             using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@username", user.username);
                 sqlCmd.Parameters.AddWithValue("@userstatus", user.userstatus);
+                sqlCmd.Parameters.AddWithValue("@userip", user.userip);
                 sqlCmd.Parameters.AddWithValue("@userid", user.userid);
                 sqlCmd.ExecuteNonQuery();
             }
@@ -96,10 +97,10 @@ namespace DAL_LanChat
         {
             conn.Open();
             bool check;
-            string sql = string.Format("SELECT COUNT(*) FROM SINHVIEN WHERE @Attribute = @value");
+            string sql = string.Format("SELECT COUNT(*) FROM users WHERE "+ Attribute +" = @value");
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@Attribute", Attribute);
+                cmd.Parameters.AddWithValue("@value", value);
                 check = Convert.ToBoolean(cmd.ExecuteScalar());
             }
             conn.Close();
@@ -109,10 +110,9 @@ namespace DAL_LanChat
         {
             conn.Open();
             DataTable table = new DataTable();
-            string sql = "SELECT * FROM users WHERE @Attribute = @value";
+            string sql = "SELECT * FROM users WHERE "+ Attribute +" = @value";
             using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
             {
-                sqlCmd.Parameters.AddWithValue("@Attribute", Attribute);
                 sqlCmd.Parameters.AddWithValue("@value", value);
                 using (SqlDataAdapter sqlAdapter = new SqlDataAdapter(sqlCmd))
                 {
@@ -124,6 +124,18 @@ namespace DAL_LanChat
             for (int i = 0; i < id.Length; ++i)
                 id[i] = table.Rows[i].Field<int>(0);
             return id;
+        }
+        public void UpdateUsers(int id, string Attribute, object value)
+        {
+            conn.Open();
+            string sql = "UPDATE users SET "+ Attribute +" = @value WHERE userid = @userid";
+            using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
+            {
+                sqlCmd.Parameters.AddWithValue("@value", value);
+                sqlCmd.Parameters.AddWithValue("@userid", id);
+                sqlCmd.ExecuteNonQuery();
+            }
+            conn.Close();
         }
     }
 }
