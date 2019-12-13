@@ -49,7 +49,7 @@ namespace Client
             {
                 this.Hide();
                 MainForm main = new MainForm(txbserverip.Text,txbName.Text);
-                main.Show();
+                main.ShowDialog();
                 this.Close();
             }
             else
