@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO_mess.cs" />
     <Compile Include="DTO_users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

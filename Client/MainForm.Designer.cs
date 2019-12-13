@@ -35,6 +35,7 @@
             this.lbl1 = new System.Windows.Forms.Label();
             this.ptbMinimize = new System.Windows.Forms.PictureBox();
             this.ptbClose = new System.Windows.Forms.PictureBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbMinimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).BeginInit();
@@ -49,7 +50,7 @@
             this.panel1.Controls.Add(this.lbl1);
             this.panel1.Location = new System.Drawing.Point(-1, -7);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(221, 483);
+            this.panel1.Size = new System.Drawing.Size(221, 457);
             this.panel1.TabIndex = 0;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
@@ -100,6 +101,7 @@
             this.btnFriend.TabIndex = 1;
             this.btnFriend.Text = "Friends";
             this.btnFriend.UseVisualStyleBackColor = false;
+            this.btnFriend.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseClick);
             // 
             // lbl1
             // 
@@ -140,15 +142,27 @@
             this.ptbClose.MouseEnter += new System.EventHandler(this.ptbClose_MouseEnter);
             this.ptbClose.MouseLeave += new System.EventHandler(this.ptbClose_MouseLeave);
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.LightCoral;
+            this.panel2.Location = new System.Drawing.Point(220, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(219, 450);
+            this.panel2.TabIndex = 2;
+            this.panel2.MouseEnter += new System.EventHandler(this.panel2_MouseEnter);
+            this.panel2.MouseLeave += new System.EventHandler(this.panel2_MouseLeave);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.ptbMinimize);
             this.Controls.Add(this.ptbClose);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -172,5 +186,6 @@
         private System.Windows.Forms.PictureBox ptbMinimize;
         private System.Windows.Forms.Button btnGame;
         private System.Windows.Forms.Button btnSetting;
+        private System.Windows.Forms.Panel panel2;
     }
 }

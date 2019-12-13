@@ -16,8 +16,8 @@ namespace Client
 {
     public partial class LoginForm : Form
     {
-        TcpClient client;
         string localIP = getlocalIP();
+        SettingDialog setting = new SettingDialog();
         public LoginForm()
         {
             InitializeComponent();
@@ -36,7 +36,6 @@ namespace Client
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-
             this.Close();
         }
 
@@ -48,8 +47,9 @@ namespace Client
             SocketPacket returnpacket = DataTranferer.SendAndReceive(txbserverip.Text, 52054, packet);
             if (returnpacket.Message == "OK")
             {
+                this.Hide();
                 MainForm main = new MainForm(txbserverip.Text,txbName.Text);
-                main.ShowDialog();
+                main.Show();
                 this.Close();
             }
             else
@@ -67,6 +67,27 @@ namespace Client
                 localIP = endPoint.Address.ToString();
             }
             return localIP;
+        }
+
+        private void ptbSetting_MouseClick(object sender, MouseEventArgs e)
+        {
+            PtbSettingsMenuStrip1.Show(ptbSetting, e.Location);
+        }
+
+        private void ptbSetting_MouseEnter(object sender, EventArgs e)
+        {
+            ptbSetting.BackColor = Color.FromArgb(118, 22, 22);
+        }
+
+        private void ptbSetting_MouseLeave(object sender, EventArgs e)
+        {
+            ptbSetting.BackColor = Color.Transparent;
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            setting.ShowDialog();
+            txbserverip.Text = setting.ServerIP;
         }
     }
 }

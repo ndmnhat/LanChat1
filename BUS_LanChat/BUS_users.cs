@@ -44,6 +44,11 @@ namespace BUS_LanChat
         {
             return DAL_USER.GetUsersID(Attribute, value);
         }
+        public int GetUsersID(string name)
+        {
+            int[] idarr = DAL_USER.GetUsersID("username", name);
+            return idarr[0];
+        }
         public int GetUsersLength()
         {
             DataTable table = DAL_USER.GetAllUsers();

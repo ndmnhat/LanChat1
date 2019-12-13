@@ -18,3 +18,6 @@ C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Networking.dll
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Networking.pdb
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.Tiles.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.PrivateChat.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomRichTextBox.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomTextBox.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.SettingDialog.resources

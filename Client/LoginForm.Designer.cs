@@ -28,13 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.txbName = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.ptbClose = new System.Windows.Forms.PictureBox();
             this.txbserverip = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
             this.lblserver = new System.Windows.Forms.Label();
+            this.ptbSetting = new System.Windows.Forms.PictureBox();
+            this.ptbClose = new System.Windows.Forms.PictureBox();
+            this.PtbSettingsMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.ptbSetting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).BeginInit();
+            this.PtbSettingsMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txbName
@@ -44,7 +50,7 @@
             this.txbName.Location = new System.Drawing.Point(50, 71);
             this.txbName.MinimumSize = new System.Drawing.Size(211, 30);
             this.txbName.Name = "txbName";
-            this.txbName.Size = new System.Drawing.Size(211, 30);
+            this.txbName.Size = new System.Drawing.Size(211, 22);
             this.txbName.TabIndex = 1;
             this.txbName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -64,20 +70,6 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.button1_MouseClick);
             // 
-            // ptbClose
-            // 
-            this.ptbClose.BackColor = System.Drawing.Color.Firebrick;
-            this.ptbClose.BackgroundImage = global::Client.Properties.Resources.close_white_108x108;
-            this.ptbClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ptbClose.Location = new System.Drawing.Point(293, 0);
-            this.ptbClose.Name = "ptbClose";
-            this.ptbClose.Size = new System.Drawing.Size(24, 24);
-            this.ptbClose.TabIndex = 3;
-            this.ptbClose.TabStop = false;
-            this.ptbClose.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
-            this.ptbClose.MouseEnter += new System.EventHandler(this.pictureBox1_MouseEnter);
-            this.ptbClose.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
-            // 
             // txbserverip
             // 
             this.txbserverip.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -85,7 +77,7 @@
             this.txbserverip.Location = new System.Drawing.Point(50, 161);
             this.txbserverip.MinimumSize = new System.Drawing.Size(211, 30);
             this.txbserverip.Name = "txbserverip";
-            this.txbserverip.Size = new System.Drawing.Size(211, 30);
+            this.txbserverip.Size = new System.Drawing.Size(211, 22);
             this.txbserverip.TabIndex = 1;
             this.txbserverip.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -111,12 +103,55 @@
             this.lblserver.TabIndex = 0;
             this.lblserver.Text = "Server IP";
             // 
+            // ptbSetting
+            // 
+            this.ptbSetting.BackColor = System.Drawing.Color.Firebrick;
+            this.ptbSetting.BackgroundImage = global::Client.Properties.Resources.settings;
+            this.ptbSetting.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ptbSetting.Location = new System.Drawing.Point(0, 0);
+            this.ptbSetting.Name = "ptbSetting";
+            this.ptbSetting.Size = new System.Drawing.Size(24, 24);
+            this.ptbSetting.TabIndex = 3;
+            this.ptbSetting.TabStop = false;
+            this.ptbSetting.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ptbSetting_MouseClick);
+            this.ptbSetting.MouseEnter += new System.EventHandler(this.ptbSetting_MouseEnter);
+            this.ptbSetting.MouseLeave += new System.EventHandler(this.ptbSetting_MouseLeave);
+            // 
+            // ptbClose
+            // 
+            this.ptbClose.BackColor = System.Drawing.Color.Firebrick;
+            this.ptbClose.BackgroundImage = global::Client.Properties.Resources.close_white_108x108;
+            this.ptbClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ptbClose.Location = new System.Drawing.Point(293, 0);
+            this.ptbClose.Name = "ptbClose";
+            this.ptbClose.Size = new System.Drawing.Size(24, 24);
+            this.ptbClose.TabIndex = 3;
+            this.ptbClose.TabStop = false;
+            this.ptbClose.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.ptbClose.MouseEnter += new System.EventHandler(this.pictureBox1_MouseEnter);
+            this.ptbClose.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
+            // 
+            // PtbSettingsMenuStrip1
+            // 
+            this.PtbSettingsMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.PtbSettingsMenuStrip1.Name = "PtbSettingsMenuStrip1";
+            this.PtbSettingsMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Firebrick;
             this.ClientSize = new System.Drawing.Size(318, 277);
+            this.Controls.Add(this.ptbSetting);
             this.Controls.Add(this.ptbClose);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txbserverip);
@@ -128,7 +163,9 @@
             this.Name = "LoginForm";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            ((System.ComponentModel.ISupportInitialize)(this.ptbSetting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).EndInit();
+            this.PtbSettingsMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,6 +178,9 @@
         private System.Windows.Forms.TextBox txbserverip;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Label lblserver;
+        private System.Windows.Forms.PictureBox ptbSetting;
+        private System.Windows.Forms.ContextMenuStrip PtbSettingsMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
 

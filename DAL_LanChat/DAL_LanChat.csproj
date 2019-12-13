@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL_mess.cs" />
     <Compile Include="DAL_users.cs" />
     <Compile Include="dbConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

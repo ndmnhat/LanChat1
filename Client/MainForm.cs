@@ -16,16 +16,18 @@ using Client.CustomControl;
 using System.Threading;
 namespace Client
 {
+    public delegate void MessageEventHandler(object sender, UpdateEventArgs e);
     public partial class MainForm : Form
     {
-        string serverip;
-        string name;
+        public string serverip { get; private set; }
+        public string name { get; private set; }
         List<Tiles> FriendListTiles = new List<Tiles>();
+        public event MessageEventHandler UpdateMessageRequest;
         public MainForm()
         {
             InitializeComponent();
         }
-        public MainForm(string svip,string username)
+        public MainForm(string svip, string username)
         {
             CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
@@ -111,18 +113,19 @@ namespace Client
         {
             FriendListTiles.Clear();
             string[] separator = { "\n" };
-            string[] subst = st.Split(separator,StringSplitOptions.RemoveEmptyEntries);
+            string[] subst = st.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             int FriendCount = Convert.ToInt32(subst[0]);
-            for(int i = 0; i < FriendCount; ++i)
+            for (int i = 0; i < FriendCount; ++i)
             {
-                string[] subsubst = subst[i+1].Split(':');
+                string[] subsubst = subst[i + 1].Split(':');
                 //if (subsubst[1] == name)
-                    //continue;
+                //continue;
                 Tiles friendtiles = new Tiles();
                 friendtiles.TilesName.Text = subsubst[0];
                 friendtiles.TilesIP = subsubst[1];
-                friendtiles.Location = new Point(253 + 187*(i%3),40 + 187*(i/3));
+                friendtiles.Location = new Point(253 + 187 * (i % 3), 40 + 187 * (i / 3));
                 friendtiles.Size = new Size(147, 147);
+                friendtiles.MouseClick += delegate (object sender, MouseEventArgs e) { Friendtiles_MouseClick(sender, e, this, subsubst[0]); };
                 FriendListTiles.Add(friendtiles);
                 //this.Controls.Add(FriendListTiles[i]);
                 this.Invoke((MethodInvoker)delegate
@@ -131,6 +134,13 @@ namespace Client
                 });
             }
         }
+
+        private void Friendtiles_MouseClick(object sender, MouseEventArgs e, MainForm form, string receivername)
+        {
+            PrivateChat chat = new PrivateChat(form, receivername);
+            chat.Show();
+        }
+
         private void ReceiveFromServer()
         {
 
@@ -140,21 +150,65 @@ namespace Client
                 IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(serverip), 52051);
                 byte[] data = receiver.Receive(ref serveriPEnd);
                 SocketPacket returnpacket = SocketPacket.DeSerializedItem(data);
-                MessageBox.Show(returnpacket.Message);
-                switch(returnpacket.packetType)
+                //MessageBox.Show(returnpacket.Message);
+                switch (returnpacket.packetType)
                 {
                     case PacketType.REQFRIEND:
                         GetFriendList(returnpacket.Message);
                         break;
+
+                    case PacketType.REQUPDATEMESS:
+                        UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message),returnpacket.MessageRow));
+                        break;
                 }
             }
-                
+
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SocketPacket disconnect = new SocketPacket(PacketType.DISCON, getlocalIP(), serverip, 52052, 52054);
             DataTranferer.Send(serverip, 52052, disconnect);
+        }
+        bool open = false;
+        private void panel2_MouseClick(object sender, MouseEventArgs e)
+        {
+            Task SlidePanel = new Task((Action)Slide);
+            SlidePanel.Start();
+        }
+        private void Slide()
+        {
+            open = !open;
+            if (open)
+            {
+                while (this.panel2.Location.X > -5)
+                    panel2.Location = new Point(panel2.Location.X - 1, panel2.Location.Y);
+            }
+            else
+            {
+                while (this.panel2.Location.X < 220)
+                    panel2.Location = new Point(panel2.Location.X + 1, panel2.Location.Y);
+            }
+        }
+
+        private void panel2_MouseEnter(object sender, EventArgs e)
+        {
+            //while(panel2.Opacity )
+        }
+
+        private void panel2_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+    }
+    public class UpdateEventArgs : EventArgs
+    {
+        public int userid { get; set; }
+        public DataTable newMessage { get; set; }
+        public UpdateEventArgs(int uid, DataTable row)
+        {
+            userid = uid;
+            newMessage = row;
         }
     }
 }
