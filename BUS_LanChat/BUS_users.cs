@@ -63,5 +63,14 @@ namespace BUS_LanChat
         {
             DAL_USER.UpdateUsers(id, Attribute, value);
         }
+        public bool PasswordCheck(string Username, string Password)
+        {
+            int id = GetUsersID(Username);
+            DTO_users user = DAL_USER.GetUsers(id);
+            if (Password == user.userpassword)
+                return true;
+            else
+                return false;
+        }
     }
 }

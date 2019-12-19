@@ -14,17 +14,20 @@ using Packet;
 using Networking;
 using Client.CustomControl;
 using System.Threading;
+using System.Drawing.Drawing2D;
 namespace Client
 {
     public delegate void MessageEventHandler(object sender, UpdateEventArgs e);
     public partial class MainForm : Form
     {
+        UdpClient receiver;
         public string serverip { get; private set; }
         public string name { get; private set; }
         List<Tiles> FriendListTiles = new List<Tiles>();
         public event MessageEventHandler UpdateMessageRequest;
         public MainForm()
         {
+            CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
         }
         public MainForm(string svip, string username)
@@ -44,12 +47,11 @@ namespace Client
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            receiver = new UdpClient(52053);
+            Task.Run(() => ReceiveFromServer());
+            label1.Text = name;
             SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
             DataTranferer.Send(serverip, 52054, reqfriendpacket);
-            ThreadStart receivethread = new ThreadStart(ReceiveFromServer);
-            Thread thread1 = new Thread(receivethread);
-            thread1.IsBackground = true;
-            thread1.Start();
         }
 
         private void ptbClose_MouseEnter(object sender, EventArgs e)
@@ -123,14 +125,14 @@ namespace Client
                 Tiles friendtiles = new Tiles();
                 friendtiles.TilesName.Text = subsubst[0];
                 friendtiles.TilesIP = subsubst[1];
-                friendtiles.Location = new Point(253 + 187 * (i % 3), 40 + 187 * (i / 3));
-                friendtiles.Size = new Size(147, 147);
+                friendtiles.Location = new Point(30 + 164 * (i % 3), 0 + 177 * (i / 3));
+                friendtiles.Size = new Size(114,107);
                 friendtiles.MouseClick += delegate (object sender, MouseEventArgs e) { Friendtiles_MouseClick(sender, e, this, subsubst[0]); };
                 FriendListTiles.Add(friendtiles);
                 //this.Controls.Add(FriendListTiles[i]);
                 this.Invoke((MethodInvoker)delegate
                 {
-                    this.Controls.Add(FriendListTiles[i]);
+                    this.pnlFriend.Controls.Add(FriendListTiles[i]);
                 });
             }
         }
@@ -143,8 +145,6 @@ namespace Client
 
         private void ReceiveFromServer()
         {
-
-            UdpClient receiver = new UdpClient(52053);
             while (true)
             {
                 IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(serverip), 52051);
@@ -171,25 +171,6 @@ namespace Client
             DataTranferer.Send(serverip, 52052, disconnect);
         }
         bool open = false;
-        private void panel2_MouseClick(object sender, MouseEventArgs e)
-        {
-            Task SlidePanel = new Task((Action)Slide);
-            SlidePanel.Start();
-        }
-        private void Slide()
-        {
-            open = !open;
-            if (open)
-            {
-                while (this.panel2.Location.X > -5)
-                    panel2.Location = new Point(panel2.Location.X - 1, panel2.Location.Y);
-            }
-            else
-            {
-                while (this.panel2.Location.X < 220)
-                    panel2.Location = new Point(panel2.Location.X + 1, panel2.Location.Y);
-            }
-        }
 
         private void panel2_MouseEnter(object sender, EventArgs e)
         {
@@ -199,6 +180,37 @@ namespace Client
         private void panel2_MouseLeave(object sender, EventArgs e)
         {
 
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            LinearGradientBrush brush = new LinearGradientBrush(panel1.ClientRectangle, ColorTranslator.FromHtml("#ee4540"), ColorTranslator.FromHtml("#801336"), LinearGradientMode.Vertical);
+            g.FillRectangle(brush, panel1.ClientRectangle);
+            g.DrawImage(CropImage(Image.FromFile("a.jpg")),new Rectangle(panel1.Width/2-60,30,120,120));
+            g.Dispose();
+        }
+        public Image CropImage(Image img)
+        {
+            int x = img.Width / 2;
+            int y = img.Height / 2;
+            int r = Math.Min(x, y);
+
+            Bitmap tmp = null;
+            tmp = new Bitmap(2 * r, 2 * r);
+            using (Graphics g = Graphics.FromImage(tmp))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TranslateTransform(tmp.Width / 2, tmp.Height / 2);
+                GraphicsPath gp = new GraphicsPath();
+                gp.AddEllipse(0 - r, 0 - r, 2 * r, 2 * r);
+                Region rg = new Region(gp);
+                g.SetClip(rg, CombineMode.Replace);
+                Bitmap bmp = new Bitmap(img);
+                g.DrawImage(bmp, new Rectangle(-r, -r, 2 * r, 2 * r), new Rectangle(x - r, y - r, 2 * r, 2 * r), GraphicsUnit.Pixel);
+            }
+            return tmp;
         }
     }
     public class UpdateEventArgs : EventArgs
@@ -211,4 +223,5 @@ namespace Client
             newMessage = row;
         }
     }
+
 }

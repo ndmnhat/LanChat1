@@ -21,3 +21,5 @@ C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.PrivateChat.resource
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomRichTextBox.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomTextBox.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.SettingDialog.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomLoginTextBox.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomButton.resources

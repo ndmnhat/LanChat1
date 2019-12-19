@@ -147,8 +147,12 @@ namespace Packet
                     info.AddValue("MessageTable", MessageTable, typeof(DataTable));
                     break;
 
-
+                case PacketType.REG:
                 case PacketType.REQCON:
+                    info.AddValue("SenderName", SenderName, typeof(string));
+                    info.AddValue("Msg", Message, typeof(string));
+                    break;
+
                 case PacketType.REQFRIEND:
                     info.AddValue("Msg", Message, typeof(string));
                     break;
@@ -200,7 +204,11 @@ namespace Packet
                     break;
 
 
+                case PacketType.REG:
                 case PacketType.REQCON:
+                    SenderName = (string)info.GetValue("SenderName", typeof(string));
+                    Message = (string)info.GetValue("Msg", typeof(string));
+                    break;
                 case PacketType.REQFRIEND:
                     Message = (string)info.GetValue("Msg", typeof(string));
                     break;
@@ -246,6 +254,7 @@ namespace Packet
         DISCON,
         MESSAGETABLE,
         MESSAGE,
+        REG,
         NONE
     }
 }

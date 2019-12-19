@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnSetting = new System.Windows.Forms.Button();
-            this.btnGame = new System.Windows.Forms.Button();
-            this.btnFriend = new System.Windows.Forms.Button();
-            this.lbl1 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ptbMinimize = new System.Windows.Forms.PictureBox();
             this.ptbClose = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlFriend = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbMinimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).BeginInit();
             this.SuspendLayout();
@@ -44,82 +44,53 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Firebrick;
-            this.panel1.Controls.Add(this.btnSetting);
-            this.panel1.Controls.Add(this.btnGame);
-            this.panel1.Controls.Add(this.btnFriend);
-            this.panel1.Controls.Add(this.lbl1);
-            this.panel1.Location = new System.Drawing.Point(-1, -7);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(221, 457);
+            this.panel1.Size = new System.Drawing.Size(273, 430);
             this.panel1.TabIndex = 0;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
-            // btnSetting
+            // label1
             // 
-            this.btnSetting.BackColor = System.Drawing.Color.Transparent;
-            this.btnSetting.FlatAppearance.BorderSize = 0;
-            this.btnSetting.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(118)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-            this.btnSetting.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetting.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSetting.ForeColor = System.Drawing.Color.White;
-            this.btnSetting.Location = new System.Drawing.Point(0, 208);
-            this.btnSetting.Name = "btnSetting";
-            this.btnSetting.Size = new System.Drawing.Size(221, 47);
-            this.btnSetting.TabIndex = 1;
-            this.btnSetting.Text = "Settings";
-            this.btnSetting.UseVisualStyleBackColor = false;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Quicksand Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(0, 160);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(273, 37);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "username";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnGame
+            // textBox1
             // 
-            this.btnGame.BackColor = System.Drawing.Color.Transparent;
-            this.btnGame.FlatAppearance.BorderSize = 0;
-            this.btnGame.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(118)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-            this.btnGame.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGame.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGame.ForeColor = System.Drawing.Color.White;
-            this.btnGame.Location = new System.Drawing.Point(0, 161);
-            this.btnGame.Name = "btnGame";
-            this.btnGame.Size = new System.Drawing.Size(221, 47);
-            this.btnGame.TabIndex = 1;
-            this.btnGame.Text = "Games";
-            this.btnGame.UseVisualStyleBackColor = false;
+            this.textBox1.BackColor = System.Drawing.Color.White;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Nunito Light", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(328, 25);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(174, 26);
+            this.textBox1.TabIndex = 3;
             // 
-            // btnFriend
+            // pictureBox1
             // 
-            this.btnFriend.BackColor = System.Drawing.Color.Transparent;
-            this.btnFriend.FlatAppearance.BorderSize = 0;
-            this.btnFriend.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(118)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
-            this.btnFriend.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnFriend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFriend.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFriend.ForeColor = System.Drawing.Color.White;
-            this.btnFriend.Location = new System.Drawing.Point(0, 114);
-            this.btnFriend.Name = "btnFriend";
-            this.btnFriend.Size = new System.Drawing.Size(221, 47);
-            this.btnFriend.TabIndex = 1;
-            this.btnFriend.Text = "Friends";
-            this.btnFriend.UseVisualStyleBackColor = false;
-            this.btnFriend.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseClick);
-            // 
-            // lbl1
-            // 
-            this.lbl1.AutoSize = true;
-            this.lbl1.Font = new System.Drawing.Font("Micra", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl1.ForeColor = System.Drawing.Color.White;
-            this.lbl1.Location = new System.Drawing.Point(30, 26);
-            this.lbl1.Name = "lbl1";
-            this.lbl1.Size = new System.Drawing.Size(167, 25);
-            this.lbl1.TabIndex = 0;
-            this.lbl1.Text = "LANCHAT";
+            this.pictureBox1.BackgroundImage = global::Client.Properties.Resources.searchtextbox;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox1.Location = new System.Drawing.Point(289, 20);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(232, 39);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
             // 
             // ptbMinimize
             // 
             this.ptbMinimize.BackColor = System.Drawing.Color.Transparent;
-            this.ptbMinimize.BackgroundImage = global::Client.Properties.Resources.minimize;
+            this.ptbMinimize.BackgroundImage = global::Client.Properties.Resources.minimizewhite;
             this.ptbMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ptbMinimize.Location = new System.Drawing.Point(755, 0);
+            this.ptbMinimize.Location = new System.Drawing.Point(749, 0);
             this.ptbMinimize.Name = "ptbMinimize";
             this.ptbMinimize.Size = new System.Drawing.Size(24, 24);
             this.ptbMinimize.TabIndex = 1;
@@ -131,7 +102,7 @@
             // ptbClose
             // 
             this.ptbClose.BackColor = System.Drawing.Color.Transparent;
-            this.ptbClose.BackgroundImage = global::Client.Properties.Resources.close;
+            this.ptbClose.BackgroundImage = global::Client.Properties.Resources.close_white_108x108;
             this.ptbClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ptbClose.Location = new System.Drawing.Point(776, 0);
             this.ptbClose.Name = "ptbClose";
@@ -142,27 +113,27 @@
             this.ptbClose.MouseEnter += new System.EventHandler(this.ptbClose_MouseEnter);
             this.ptbClose.MouseLeave += new System.EventHandler(this.ptbClose_MouseLeave);
             // 
-            // panel2
+            // pnlFriend
             // 
-            this.panel2.BackColor = System.Drawing.Color.LightCoral;
-            this.panel2.Location = new System.Drawing.Point(220, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(219, 450);
-            this.panel2.TabIndex = 2;
-            this.panel2.MouseEnter += new System.EventHandler(this.panel2_MouseEnter);
-            this.panel2.MouseLeave += new System.EventHandler(this.panel2_MouseLeave);
+            this.pnlFriend.AutoScroll = true;
+            this.pnlFriend.Location = new System.Drawing.Point(279, 84);
+            this.pnlFriend.Name = "pnlFriend";
+            this.pnlFriend.Size = new System.Drawing.Size(509, 334);
+            this.pnlFriend.TabIndex = 4;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(19)))), ((int)(((byte)(44)))));
+            this.ClientSize = new System.Drawing.Size(800, 430);
+            this.Controls.Add(this.pnlFriend);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.ptbMinimize);
             this.Controls.Add(this.ptbClose);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -170,22 +141,22 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbMinimize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lbl1;
-        private System.Windows.Forms.Button btnFriend;
         private System.Windows.Forms.PictureBox ptbClose;
         private System.Windows.Forms.PictureBox ptbMinimize;
-        private System.Windows.Forms.Button btnGame;
-        private System.Windows.Forms.Button btnSetting;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Panel pnlFriend;
     }
 }

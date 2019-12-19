@@ -102,18 +102,22 @@ namespace Server
                     break;
 
 
+                case PacketType.REG:
+                    REG_packet_process(packet);
+                    break;
+
+
                 default:break;
             }
         }
         public void REQCON_packet_process(SocketPacket packet)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
-            if (!UsersBUS.isUsersHave("username", packet.Message))
-                UsersBUS.InsertUsers(new DTO_users(0, packet.Message, true, packet.SenderIP));
+            if (UsersBUS.PasswordCheck(packet.SenderName, packet.Message))
+                response.Message = "OK";
             else
-                UsersBUS.UpdateUsers(new DTO_users(UsersBUS.GetUsersID("username", packet.Message)[0], packet.Message, true, packet.SenderIP));
+                response.Message = "Wrong password!";
             response.packetType = PacketType.REQCON;
-            response.Message = "OK";
             byte[] data = SocketPacket.SerializedItem(response);
             server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
         }
@@ -169,6 +173,20 @@ namespace Server
             byte[] data3 = SocketPacket.SerializedItem(response);
             sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
             sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user2ip), 52053));
+        }
+        public void REG_packet_process(SocketPacket packet)
+        {
+            SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
+            if (!UsersBUS.isUsersHave("username", packet.SenderName))
+            {
+                UsersBUS.InsertUsers(new DTO_users(0, packet.SenderName, true, packet.SenderIP, packet.Message));
+                response.Message = "OK";
+            }
+            else
+                response.Message = "Username already taken";
+            response.packetType = PacketType.REG;
+            byte[] data = SocketPacket.SerializedItem(response);
+            server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
         }
     }
 }

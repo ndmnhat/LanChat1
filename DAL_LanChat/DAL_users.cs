@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using System.Drawing;
+using System.IO;
 using DTO_LanChat;
 namespace DAL_LanChat
 {
@@ -38,12 +40,13 @@ namespace DAL_LanChat
         public void InsertUsers(DTO_users user)
         {
             conn.Open();
-            string sql = "INSERT INTO users (username,userstatus,userip) VALUES (@username,@userstatus,@userip)";
+            string sql = "INSERT INTO users (username,userstatus,userip,userpassword) VALUES (@username,@userstatus,@userip,@userpassword)";
             using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@username", user.username);
                 sqlCmd.Parameters.AddWithValue("@userstatus", user.userstatus);
                 sqlCmd.Parameters.AddWithValue("@userip", user.userip);
+                sqlCmd.Parameters.AddWithValue("@userpassword", user.userpassword);
                 sqlCmd.ExecuteNonQuery();
             }
             conn.Close();
@@ -51,13 +54,14 @@ namespace DAL_LanChat
         public void UpdateUsers(DTO_users user)
         {
             conn.Open();
-            string sql = "UPDATE users SET username = @username, userstatus = @userstatus, userip = @userip WHERE userid = @userid";
+            string sql = "UPDATE users SET username = @username, userstatus = @userstatus, userip = @userip, useravatar = @useravatar WHERE userid = @userid";
             using (SqlCommand sqlCmd = new SqlCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@username", user.username);
                 sqlCmd.Parameters.AddWithValue("@userstatus", user.userstatus);
                 sqlCmd.Parameters.AddWithValue("@userip", user.userip);
                 sqlCmd.Parameters.AddWithValue("@userid", user.userid);
+                sqlCmd.Parameters.AddWithValue("@useravatar", imageToByteArray(user.useravatar));
                 sqlCmd.ExecuteNonQuery();
             }
             conn.Close();
@@ -87,9 +91,12 @@ namespace DAL_LanChat
                     dataAdapter.Fill(dataTable);
                 }
             }
-            user.userid = dataTable.Rows[0].Field<int>(0);
-            user.username = dataTable.Rows[0].Field<string>(1);
-            user.userstatus = dataTable.Rows[0].Field<bool>(2);
+            user.userid = dataTable.Rows[0].Field<int>("userid");
+            user.username = dataTable.Rows[0].Field<string>("username");
+            user.userstatus = dataTable.Rows[0].Field<bool>("userstatus");
+            user.userpassword = dataTable.Rows[0].Field<string>("userpassword");
+            user.userip = dataTable.Rows[0].Field<string>("userip");
+            //user.useravatar = byteArrayToImage(dataTable.Rows[0].Field<byte[]>("useravatar"));
             conn.Close();
             return user;
         }
@@ -136,6 +143,18 @@ namespace DAL_LanChat
                 sqlCmd.ExecuteNonQuery();
             }
             conn.Close();
+        }
+        byte[] imageToByteArray(System.Drawing.Image imageIn)
+        {
+            MemoryStream ms = new MemoryStream();
+            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            return ms.ToArray();
+        }
+        Image byteArrayToImage(byte[] byteArrayIn)
+        {
+            MemoryStream ms = new MemoryStream(byteArrayIn);
+            Image returnImage = Image.FromStream(ms);
+            return returnImage;
         }
     }
 }
