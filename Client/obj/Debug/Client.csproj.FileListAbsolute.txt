@@ -23,3 +23,7 @@ C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.Custom
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.SettingDialog.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomLoginTextBox.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomButton.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.Caro.resources
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\caro.png
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\o.png
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\x.png

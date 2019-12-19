@@ -48,6 +48,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Caro.designer.cs">
+      <DependentUpon>Caro.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\CustomButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -104,6 +110,9 @@
     <Compile Include="SettingDialog.Designer.cs">
       <DependentUpon>SettingDialog.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Caro.resx">
+      <DependentUpon>Caro.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\CustomButton.resx">
       <DependentUpon>CustomButton.cs</DependentUpon>
     </EmbeddedResource>
@@ -232,6 +241,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tiles3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\caro.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\o.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
