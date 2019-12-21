@@ -17,6 +17,8 @@ namespace Client
         const int Square_Width = 30;
         const int Square_Height = 30;
         int index = 0;
+        int pointx = 0;
+        int pointo = 0;
         
         List<List<Button>> lBanCo;
         public Caro()
@@ -24,9 +26,15 @@ namespace Client
             InitializeComponent();
             DrawChessBoard();
             ptcbxPlayerChess.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\x.png");
+
+            pgsCooldown.Step = 100;
+            pgsCooldown.Maximum = 10000;
+            pgsCooldown.Value = 0;
+            
         }
         void DrawChessBoard()
         {
+            pnlBanco.Enabled = true;
             lBanCo = new List<List<Button>>();
             Button preButton = new Button()
             {
@@ -58,11 +66,14 @@ namespace Client
 
         private void Btn_Click(object sender, EventArgs e)
         {
+            
             Button btn = sender as Button;
             if (btn.BackgroundImage != null)
                 return;
             if (index == 0)
             {
+                tmCoolDown.Start();
+                pgsCooldown.Value = 0;
                 btn.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\x.png");
                 ptcbxPlayerChess.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\o.png");
                 btn.Tag += " x";
@@ -70,6 +81,8 @@ namespace Client
             }
             else
             {
+                tmCoolDown.Start();
+                pgsCooldown.Value = 0;
                 btn.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\o.png");
                 ptcbxPlayerChess.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\x.png");
                 List<string> newdata = new List<string>();
@@ -88,6 +101,8 @@ namespace Client
         private void EndGame()
         {
             MessageBox.Show("You Win!");
+            tmCoolDown.Stop();
+            pgsCooldown.Value = 0;
         }
 
         private bool isEnd(Button btn)
@@ -120,6 +135,7 @@ namespace Client
                         left++;
                     }
                     else break;
+
                 }
                 catch (Exception)
                 {
@@ -282,6 +298,23 @@ namespace Client
             pnlBanco.Controls.Clear();
             //pnlBanco.Dispose();
             DrawChessBoard();
+        }
+
+        private void tmCoolDown_Tick(object sender, EventArgs e)
+        {
+            pgsCooldown.PerformStep();
+            DialogResult drl = new DialogResult();
+            if (pgsCooldown.Value >= pgsCooldown.Maximum)
+            {
+                tmCoolDown.Stop();
+                drl = MessageBox.Show("Time out !", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                if (drl == DialogResult.OK)
+                {
+                    pnlBanco.Enabled = false;
+                    pgsCooldown.Value = 0;
+                }
+            }
+           
         }
     }
 }

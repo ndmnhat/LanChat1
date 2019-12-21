@@ -28,14 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pnlBanco = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pcbxCaroimage = new System.Windows.Forms.PictureBox();
             this.btnNewgame = new System.Windows.Forms.Button();
             this.pgsCooldown = new System.Windows.Forms.ProgressBar();
-            this.pcbxCaroimage = new System.Windows.Forms.PictureBox();
             this.txbPlayerName = new System.Windows.Forms.TextBox();
             this.lblPlayerChess = new System.Windows.Forms.Label();
             this.ptcbxPlayerChess = new System.Windows.Forms.PictureBox();
+            this.tmCoolDown = new System.Windows.Forms.Timer(this.components);
+            this.lblPoint = new System.Windows.Forms.Label();
+            this.txbPoint = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pcbxCaroimage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptcbxPlayerChess)).BeginInit();
@@ -57,6 +63,16 @@
             this.panel1.Size = new System.Drawing.Size(240, 240);
             this.panel1.TabIndex = 1;
             // 
+            // pcbxCaroimage
+            // 
+            this.pcbxCaroimage.BackgroundImage = global::Client.Properties.Resources.caro;
+            this.pcbxCaroimage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pcbxCaroimage.Location = new System.Drawing.Point(4, 3);
+            this.pcbxCaroimage.Name = "pcbxCaroimage";
+            this.pcbxCaroimage.Size = new System.Drawing.Size(233, 233);
+            this.pcbxCaroimage.TabIndex = 0;
+            this.pcbxCaroimage.TabStop = false;
+            // 
             // btnNewgame
             // 
             this.btnNewgame.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -77,16 +93,6 @@
             this.pgsCooldown.Size = new System.Drawing.Size(240, 23);
             this.pgsCooldown.TabIndex = 3;
             // 
-            // pcbxCaroimage
-            // 
-            this.pcbxCaroimage.BackgroundImage = global::Client.Properties.Resources.caro;
-            this.pcbxCaroimage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pcbxCaroimage.Location = new System.Drawing.Point(4, 3);
-            this.pcbxCaroimage.Name = "pcbxCaroimage";
-            this.pcbxCaroimage.Size = new System.Drawing.Size(233, 233);
-            this.pcbxCaroimage.TabIndex = 0;
-            this.pcbxCaroimage.TabStop = false;
-            // 
             // txbPlayerName
             // 
             this.txbPlayerName.Location = new System.Drawing.Point(460, 323);
@@ -98,7 +104,7 @@
             // 
             this.lblPlayerChess.AutoSize = true;
             this.lblPlayerChess.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPlayerChess.Location = new System.Drawing.Point(456, 388);
+            this.lblPlayerChess.Location = new System.Drawing.Point(461, 418);
             this.lblPlayerChess.Name = "lblPlayerChess";
             this.lblPlayerChess.Size = new System.Drawing.Size(88, 13);
             this.lblPlayerChess.TabIndex = 5;
@@ -107,11 +113,51 @@
             // ptcbxPlayerChess
             // 
             this.ptcbxPlayerChess.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ptcbxPlayerChess.Location = new System.Drawing.Point(594, 349);
+            this.ptcbxPlayerChess.Location = new System.Drawing.Point(555, 402);
             this.ptcbxPlayerChess.Name = "ptcbxPlayerChess";
-            this.ptcbxPlayerChess.Size = new System.Drawing.Size(102, 102);
+            this.ptcbxPlayerChess.Size = new System.Drawing.Size(67, 49);
             this.ptcbxPlayerChess.TabIndex = 6;
             this.ptcbxPlayerChess.TabStop = false;
+            // 
+            // tmCoolDown
+            // 
+            this.tmCoolDown.Tick += new System.EventHandler(this.tmCoolDown_Tick);
+            // 
+            // lblPoint
+            // 
+            this.lblPoint.AutoSize = true;
+            this.lblPoint.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPoint.Location = new System.Drawing.Point(460, 346);
+            this.lblPoint.Name = "lblPoint";
+            this.lblPoint.Size = new System.Drawing.Size(77, 20);
+            this.lblPoint.TabIndex = 7;
+            this.lblPoint.Text = "Point X :";
+            // 
+            // txbPoint
+            // 
+            this.txbPoint.Location = new System.Drawing.Point(555, 346);
+            this.txbPoint.Name = "txbPoint";
+            this.txbPoint.ReadOnly = true;
+            this.txbPoint.Size = new System.Drawing.Size(71, 20);
+            this.txbPoint.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(460, 375);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(78, 20);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Point O :";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(555, 372);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(71, 20);
+            this.textBox1.TabIndex = 10;
             // 
             // Caro
             // 
@@ -119,6 +165,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(701, 454);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txbPoint);
+            this.Controls.Add(this.lblPoint);
             this.Controls.Add(this.ptcbxPlayerChess);
             this.Controls.Add(this.lblPlayerChess);
             this.Controls.Add(this.txbPlayerName);
@@ -146,5 +196,10 @@
         private System.Windows.Forms.TextBox txbPlayerName;
         private System.Windows.Forms.Label lblPlayerChess;
         private System.Windows.Forms.PictureBox ptcbxPlayerChess;
+        private System.Windows.Forms.Timer tmCoolDown;
+        private System.Windows.Forms.Label lblPoint;
+        private System.Windows.Forms.TextBox txbPoint;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
