@@ -84,6 +84,12 @@
     <Compile Include="CustomControl\Tiles.Designer.cs">
       <DependentUpon>Tiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditAvatarForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditAvatarForm.Designer.cs">
+      <DependentUpon>EditAvatarForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,7 @@
     <Compile Include="SettingDialog.Designer.cs">
       <DependentUpon>SettingDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="Caro.resx">
       <DependentUpon>Caro.cs</DependentUpon>
     </EmbeddedResource>
@@ -127,6 +134,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\Tiles.resx">
       <DependentUpon>Tiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditAvatarForm.resx">
+      <DependentUpon>EditAvatarForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -151,7 +161,7 @@
       <DependentUpon>SettingDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -246,6 +256,8 @@
     <Content Include="Resources\caro.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\editptb.png" />
+    <None Include="Resources\editptb2.png" />
     <Content Include="Resources\o.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

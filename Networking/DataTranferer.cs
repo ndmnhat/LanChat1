@@ -13,6 +13,9 @@ namespace Networking
 {
     public static class DataTranferer
     {
+        static UdpClient client = new UdpClient(52052);
+
+        static UdpClient sendclient = new UdpClient(52050);
         public static string getlocalIP()
         {
             string localIP;
@@ -26,7 +29,6 @@ namespace Networking
         }
         public static SocketPacket SendAndReceive(string remoteip, int remoteport, SocketPacket packet)
         {
-            UdpClient client = new UdpClient(52052);
             try
             {
                 byte[] data = SocketPacket.SerializedItem(packet);
@@ -34,37 +36,28 @@ namespace Networking
                 client.Send(data, data.Length, serveriPEnd);
                 byte[] response = client.Receive(ref serveriPEnd);
                 SocketPacket returnpacket = SocketPacket.DeSerializedItem(response);
-                client.Close();
-                client.Dispose();
                 return returnpacket;
             }
             catch (Exception exception)
             {
-                client.Close();
-                client.Dispose();
                 return new SocketPacket(PacketType.NONE, getlocalIP(), remoteip,52052,remoteport,exception.Message);
             }
         }
         public static void Send(string remoteip, int remoteport, SocketPacket packet)
         {
-            UdpClient client = new UdpClient(52052);
             try
             {
                 byte[] data = SocketPacket.SerializedItem(packet);
                 IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(remoteip), remoteport);
-                client.Send(data, data.Length, serveriPEnd);
-                client.Close();
-                client.Dispose();
+                sendclient.Send(data, data.Length, serveriPEnd);
             }
             catch (Exception)
             {
-                client.Close();
-                client.Dispose();
             }
         }
         public static SocketPacket Receiver(string remoteip, int remoteport)
         {
-            UdpClient receiver = new UdpClient(52053);
+            UdpClient receiver = new UdpClient(52054);
             IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(remoteip), remoteport);
             byte[] data = receiver.Receive(ref serveriPEnd);
             SocketPacket returnpacket = SocketPacket.DeSerializedItem(data);

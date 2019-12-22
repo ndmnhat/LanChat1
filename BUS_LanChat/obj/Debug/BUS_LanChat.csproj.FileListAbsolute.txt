@@ -8,3 +8,6 @@ C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Debug\BUS_LanChat.csprojAsse
 C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Debug\BUS_LanChat.csproj.CopyComplete
 C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Debug\BUS_LanChat.dll
 C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Debug\BUS_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Debug\System.Data.SQLite.dll
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Debug\System.Data.SQLite.xml
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Debug\System.Data.SQLite.dll.config

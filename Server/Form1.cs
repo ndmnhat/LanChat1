@@ -79,6 +79,10 @@ namespace Server
             
             switch(packet.packetType)
             {
+                case PacketType.UPDATEPROFILE:
+                    UPDATEPROFILE_packet_process(packet);
+                    break;
+
                 case PacketType.REQCON:
                     REQCON_packet_process(packet);
                     break;
@@ -114,7 +118,10 @@ namespace Server
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             if (UsersBUS.PasswordCheck(packet.SenderName, packet.Message))
+            {
+                UsersBUS.UpdateUsers(UsersBUS.GetUsersID(packet.SenderName), "userip", packet.SenderIP);
                 response.Message = "OK";
+            }
             else
                 response.Message = "Wrong password!";
             response.packetType = PacketType.REQCON;
@@ -187,6 +194,16 @@ namespace Server
             response.packetType = PacketType.REG;
             byte[] data = SocketPacket.SerializedItem(response);
             server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
+        }
+        public void UPDATEPROFILE_packet_process(SocketPacket packet)
+        {
+            UsersBUS.UpdateUsers(UsersBUS.GetUsersID("username", packet.SenderName)[0], "useravatar", packet.image);
+            SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52051, 52053);
+            response.packetType = PacketType.UPDATEPROFILE;
+            response.SenderName = packet.SenderName;
+            response.image = packet.image;
+            byte[] data = SocketPacket.SerializedItem(response);
+            sendserver.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), 52053));
         }
     }
 }

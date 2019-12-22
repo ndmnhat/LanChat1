@@ -20,7 +20,7 @@ namespace Client
             //this.button1.Left = (this.Width - this.button1.Width) / 2;
             LoadCustom();
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
-
+            serverip = setting.ServerIP;
         }
         private void LoadCustom()
         {
@@ -105,7 +105,9 @@ namespace Client
         private void ptbSetting_MouseClick(object sender, MouseEventArgs e)
         {
             setting.ShowDialog();
-            serverip = setting.ServerIP;
+            Client.Properties.Settings.Default.ServerIP = setting.ServerIP;
+            Client.Properties.Settings.Default.Save();
+            serverip = Client.Properties.Settings.Default.ServerIP;
         }
 
         private void ptbSetting_MouseEnter(object sender, EventArgs e)

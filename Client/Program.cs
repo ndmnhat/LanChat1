@@ -15,7 +15,7 @@ namespace Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Caro());
+            Application.Run(new LoginForm());
         }
     }
 }

@@ -69,12 +69,12 @@ namespace Client
         {
             for(int i = 0; i < table.Rows.Count;i++)
             {
-                if(table.Rows[i].Field<int>("senderid")==myid)
+                if(Convert.ToInt32(table.Rows[i].Field<object>("senderid"))==myid)
                 {
                     customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Right;
                     customRichTextBox1.richTextBox1.SelectionColor = Color.Blue;
                     customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Bold);
-                    customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", sendername, table.Rows[i].Field<DateTime>("timesent").ToString()));
+                    customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", sendername, Convert.ToDateTime(table.Rows[i].Field<object>("timesent")).ToString()));
                     customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Right;
                     customRichTextBox1.richTextBox1.SelectionColor = Color.Blue;
                     customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Regular);
@@ -86,7 +86,7 @@ namespace Client
                     customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Left;
                     customRichTextBox1.richTextBox1.SelectionColor = Color.Purple;
                     customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Bold);
-                    customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", receivername, table.Rows[i].Field<DateTime>("timesent").ToString()));
+                    customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", receivername, Convert.ToDateTime(table.Rows[i].Field<object>("timesent")).ToString()));
                     customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Left;
                     customRichTextBox1.richTextBox1.SelectionColor = Color.Purple;
                     customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Regular);
@@ -97,12 +97,12 @@ namespace Client
         private void UpdateMessage(DataTable table)
         {
             DataRow row = table.Rows[0];
-            if (row.Field<int>("senderid") == myid)
+            if (Convert.ToInt32(row.Field<object>("senderid")) == myid)
             {
                 customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Right;
                 customRichTextBox1.richTextBox1.SelectionColor = Color.Blue;
                 customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Bold);
-                customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", sendername, row.Field<DateTime>("timesent").ToString()));
+                customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", sendername, Convert.ToDateTime(row.Field<object>("timesent")).ToString()));
                 customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Right;
                 customRichTextBox1.richTextBox1.SelectionColor = Color.Blue;
                 customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Regular);
@@ -114,7 +114,7 @@ namespace Client
                 customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Left;
                 customRichTextBox1.richTextBox1.SelectionColor = Color.Purple;
                 customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Bold);
-                customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", receivername, row.Field<DateTime>("timesent").ToString()));
+                customRichTextBox1.richTextBox1.AppendText(string.Format("{0} ({1}):\n", receivername, Convert.ToDateTime(row.Field<object>("timesent")).ToString()));
                 customRichTextBox1.richTextBox1.SelectionAlignment = HorizontalAlignment.Left;
                 customRichTextBox1.richTextBox1.SelectionColor = Color.Purple;
                 customRichTextBox1.richTextBox1.SelectionFont = new Font("Helvetica Neue", 10, FontStyle.Regular);

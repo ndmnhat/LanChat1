@@ -20,11 +20,12 @@ namespace Client
     public delegate void MessageEventHandler(object sender, UpdateEventArgs e);
     public partial class MainForm : Form
     {
-        UdpClient receiver;
+        UdpClient receiver = new UdpClient(52053);
         public string serverip { get; private set; }
         public string name { get; private set; }
         List<Tiles> FriendListTiles = new List<Tiles>();
         public event MessageEventHandler UpdateMessageRequest;
+        bool isConnected = false;
         public MainForm()
         {
             CheckForIllegalCrossThreadCalls = false;
@@ -47,11 +48,16 @@ namespace Client
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            receiver = new UdpClient(52053);
+            
             Task.Run(() => ReceiveFromServer());
             label1.Text = name;
             SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
+            while (true)
+                if (isConnected)
+                { Task.Delay(1000); break; }
             DataTranferer.Send(serverip, 52054, reqfriendpacket);
+
+            ptbAvatar.BackgroundImage = CropImage(Image.FromFile("a.jpg"));
         }
 
         private void ptbClose_MouseEnter(object sender, EventArgs e)
@@ -148,6 +154,7 @@ namespace Client
             while (true)
             {
                 IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(serverip), 52051);
+                isConnected = true;
                 byte[] data = receiver.Receive(ref serveriPEnd);
                 SocketPacket returnpacket = SocketPacket.DeSerializedItem(data);
                 //MessageBox.Show(returnpacket.Message);
@@ -159,6 +166,10 @@ namespace Client
 
                     case PacketType.REQUPDATEMESS:
                         UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message),returnpacket.MessageRow));
+                        break;
+
+                    case PacketType.UPDATEPROFILE:
+                        this.ptbAvatar.BackgroundImage = CropImage(returnpacket.image);
                         break;
                 }
             }
@@ -188,10 +199,35 @@ namespace Client
             g.SmoothingMode = SmoothingMode.AntiAlias;
             LinearGradientBrush brush = new LinearGradientBrush(panel1.ClientRectangle, ColorTranslator.FromHtml("#ee4540"), ColorTranslator.FromHtml("#801336"), LinearGradientMode.Vertical);
             g.FillRectangle(brush, panel1.ClientRectangle);
-            g.DrawImage(CropImage(Image.FromFile("a.jpg")),new Rectangle(panel1.Width/2-60,30,120,120));
             g.Dispose();
         }
-        public Image CropImage(Image img)
+        
+
+        private void pictureBox2_MouseEnter(object sender, EventArgs e)
+        {
+            this.ptbEditAvatar.BackgroundImage = Client.Properties.Resources.editptb2;
+        }
+
+        private void pictureBox2_MouseLeave(object sender, EventArgs e)
+        {
+            this.ptbEditAvatar.BackgroundImage = Client.Properties.Resources.editptb;
+        }
+
+        private void pictureBox2_MouseClick(object sender, MouseEventArgs e)
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
+            if(open.ShowDialog() == DialogResult.OK)
+            {
+                Bitmap image = new Bitmap(open.FileName);
+                EditAvatarForm editform = new EditAvatarForm(image);
+                if(editform.ShowDialog() == DialogResult.OK)
+                {
+                    DataTranferer.Send(serverip, 52054, new SocketPacket(PacketType.UPDATEPROFILE, getlocalIP(), serverip, 52052, 52054, name, image));
+                }
+            }
+        }
+        Image CropImage(Image img)
         {
             int x = img.Width / 2;
             int y = img.Height / 2;
