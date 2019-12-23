@@ -8,12 +8,14 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Data;
+using DTO_LanChat;
 namespace Packet
 {
     [Serializable]
     public class SocketPacket : ISerializable
     {
         public PacketType packetType { get; set; }
+        public int PacketLength { get; set; }
         public string SenderIP { get; set; }
         public int SenderPort { get; set; }
         public string ReceiverIP { get; set; }
@@ -25,6 +27,7 @@ namespace Packet
         public int MessageType { get; set; }
         public DataTable MessageTable { get; set; }
         public DataTable MessageRow { get; set; }
+        public DTO_users userinfo { get; set; }
         public SocketPacket()
         {
             packetType = PacketType.NONE;
@@ -69,6 +72,21 @@ namespace Packet
             SenderPort = sport;
             ReceiverPort = rport;
         }
+        public SocketPacket(PacketType Type, string sip, string rip, int sport, int rport, int length)
+        {
+            packetType = Type;
+            SenderIP = sip;
+            ReceiverIP = rip;
+            SenderPort = sport;
+            ReceiverPort = rport;
+            PacketLength = length;
+        }
+        public SocketPacket(PacketType Type, string sip, string sendername)
+        {
+            packetType = Type;
+            SenderIP = sip;
+            SenderName = sendername;
+        }
         public SocketPacket(PacketType Type, string sip, string rip, int sport, int rport, string sendername, string receivername, string messege, int messtype)
         {
             packetType = Type;
@@ -92,15 +110,6 @@ namespace Packet
             ReceiverName = receivername;
             MessageTable = table;
         }
-        public SocketPacket(PacketType Type, string sip, string rip, int sport, int rport, DataTable row)
-        {
-            packetType = Type;
-            SenderIP = sip;
-            ReceiverIP = rip;
-            SenderPort = sport;
-            ReceiverPort = rport;
-            MessageRow = row;
-        }
         /// <summary>
         /// Initialize a image packet
         /// </summary>
@@ -118,6 +127,27 @@ namespace Packet
             SenderPort = sport;
             ReceiverPort = rport;
             image = bitmap;
+            SenderName = sendername;
+        }
+        public SocketPacket(PacketType Type, string sip, string rip, int sport, int rport, string sendername, string receivername, Bitmap bitmap)
+        {
+            packetType = Type;
+            SenderIP = sip;
+            ReceiverIP = rip;
+            SenderPort = sport;
+            ReceiverPort = rport;
+            image = bitmap;
+            SenderName = sendername;
+            ReceiverName = receivername;
+        }
+        public SocketPacket(PacketType Type, string sip, string rip, int sport, int rport, string sendername, DTO_users users)
+        {
+            packetType = Type;
+            SenderIP = sip;
+            ReceiverIP = rip;
+            SenderPort = sport;
+            ReceiverPort = rport;
+            userinfo = users;
             SenderName = sendername;
         }
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -165,9 +195,23 @@ namespace Packet
 
 
                 case PacketType.IMG:
+                    info.AddValue("SenderName", SenderName, typeof(string));
+                    info.AddValue("ReceiverName", ReceiverName, typeof(string));
                     info.AddValue("Image", image, typeof(Bitmap));
                     break;
 
+                case PacketType.REQPROFILE:
+                    info.AddValue("SenderName", SenderName, typeof(string));
+                    info.AddValue("userinfo", userinfo, typeof(DTO_users));
+                    break;
+
+                case PacketType.PACKETLENGTH:
+                    info.AddValue("PacketLength", PacketLength, typeof(int));
+                    break;
+
+                case PacketType.NONE:
+                    info.AddValue("Msg", Message, typeof(string));
+                    break;
 
                 default: break;
             }
@@ -223,9 +267,23 @@ namespace Packet
                     break;
 
                 case PacketType.IMG:
+                    SenderName = (string)info.GetValue("SenderName", typeof(string));
+                    ReceiverName = (string)info.GetValue("ReceiverName", typeof(string));
                     image = (Bitmap)info.GetValue("Image", typeof(Bitmap));
                     break;
 
+                case PacketType.REQPROFILE:
+                    SenderName = (string)info.GetValue("SenderName", typeof(string));
+                    userinfo = (DTO_users)info.GetValue("userinfo", typeof(DTO_users));
+                    break;
+
+                case PacketType.PACKETLENGTH:
+                    PacketLength = (int)info.GetValue("PacketLength", typeof(int));
+                    break;
+
+                case PacketType.NONE:
+                    Message = (string)info.GetValue("Msg", typeof(string));
+                    break;
                 default: break;
             }
         }
@@ -254,6 +312,7 @@ namespace Packet
     }
     public enum PacketType
     {
+        PACKETLENGTH,
         REQCON,
         REQFRIEND,
         REQUPDATEMESS,
@@ -262,6 +321,9 @@ namespace Packet
         MESSAGETABLE,
         MESSAGE,
         UPDATEPROFILE,
+        UPDATEAVATAR,
+        REQPROFILE,
+        REQAVATAR,
         REG,
         NONE
     }

@@ -13,6 +13,7 @@ using System.Net;
 using Packet;
 using Networking;
 using Client.CustomControl;
+using DTO_LanChat;
 using System.Threading;
 using System.Drawing.Drawing2D;
 namespace Client
@@ -38,14 +39,17 @@ namespace Client
             serverip = svip;
             name = username;
 
-            //SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
-            //DataTranferer.Send(serverip, 52054, reqfriendpacket);
-            //ThreadStart receivethread = new ThreadStart(ReceiveFromServer);
-            //Thread thread1 = new Thread(receivethread);
-            //thread1.IsBackground = true;
-            //thread1.Start();
+            LoadCustom();
         }
+        private void LoadCustom()
+        {
+            ptbAvatar.BackgroundImage = CropImage(Image.FromFile("a.jpg"));
+            btneditprofile.font = new Font("Teko", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            btneditprofile.textcolor = Color.Black;
+            btneditprofile.ButtonText = "Edit profile";
+            btneditprofile.lowertext = 3;
 
+        }
         private void MainForm_Load(object sender, EventArgs e)
         {
             
@@ -56,8 +60,10 @@ namespace Client
                 if (isConnected)
                 { Task.Delay(1000); break; }
             DataTranferer.Send(serverip, 52054, reqfriendpacket);
-
-            ptbAvatar.BackgroundImage = CropImage(Image.FromFile("a.jpg"));
+            SocketPacket reqprofilepacket = new SocketPacket(PacketType.REQPROFILE, getlocalIP(), name);
+            DataTranferer.Send(serverip, 52054, reqprofilepacket);
+            SocketPacket reqavatarpacket = new SocketPacket(PacketType.REQAVATAR, getlocalIP(), name);
+            DataTranferer.Send(serverip, 52054, reqavatarpacket);
         }
 
         private void ptbClose_MouseEnter(object sender, EventArgs e)
@@ -151,6 +157,7 @@ namespace Client
 
         private void ReceiveFromServer()
         {
+            //receiver.Client.ReceiveBufferSize = 1024 * 1024;
             while (true)
             {
                 IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(serverip), 52051);
@@ -168,8 +175,15 @@ namespace Client
                         UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message),returnpacket.MessageRow));
                         break;
 
-                    case PacketType.UPDATEPROFILE:
+                    case PacketType.UPDATEAVATAR:
                         this.ptbAvatar.BackgroundImage = CropImage(returnpacket.image);
+                        break;
+
+                    case PacketType.REQAVATAR:
+                        break;
+
+                    case PacketType.REQPROFILE:
+                        UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
                         break;
                 }
             }
@@ -201,19 +215,8 @@ namespace Client
             g.FillRectangle(brush, panel1.ClientRectangle);
             g.Dispose();
         }
-        
 
-        private void pictureBox2_MouseEnter(object sender, EventArgs e)
-        {
-            this.ptbEditAvatar.BackgroundImage = Client.Properties.Resources.editptb2;
-        }
-
-        private void pictureBox2_MouseLeave(object sender, EventArgs e)
-        {
-            this.ptbEditAvatar.BackgroundImage = Client.Properties.Resources.editptb;
-        }
-
-        private void pictureBox2_MouseClick(object sender, MouseEventArgs e)
+        private void ptbAvatar_MouseClick(object sender, MouseEventArgs e)
         {
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
@@ -223,7 +226,7 @@ namespace Client
                 EditAvatarForm editform = new EditAvatarForm(image);
                 if(editform.ShowDialog() == DialogResult.OK)
                 {
-                    DataTranferer.Send(serverip, 52054, new SocketPacket(PacketType.UPDATEPROFILE, getlocalIP(), serverip, 52052, 52054, name, image));
+                    DataTranferer.Send(serverip, 52054, new SocketPacket(PacketType.UPDATEAVATAR, getlocalIP(), serverip, 52052, 52054, name, image));
                 }
             }
         }
@@ -247,6 +250,21 @@ namespace Client
                 g.DrawImage(bmp, new Rectangle(-r, -r, 2 * r, 2 * r), new Rectangle(x - r, y - r, 2 * r, 2 * r), GraphicsUnit.Pixel);
             }
             return tmp;
+        }
+
+        private void btneditprofile_MouseClick(object sender, MouseEventArgs e)
+        {
+            EditProfileForm editform = new EditProfileForm();
+            editform.ShowDialog();
+        }
+        private void UpdateProfile(string name, string gender, DateTime birthday, string phone, Image avatar)
+        {
+            lblFullName.Text = "Name: " + name;
+            lblGender.Text = "Gender: " + gender;
+            lblBirthday.Text = "Birthday: " + birthday.ToShortDateString();
+            lblPhone.Text = "Phone: " + phone;
+            if (avatar != null)
+                ptbAvatar.BackgroundImage = CropImage(avatar);
         }
     }
     public class UpdateEventArgs : EventArgs

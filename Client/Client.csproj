@@ -90,6 +90,12 @@
     <Compile Include="EditAvatarForm.Designer.cs">
       <DependentUpon>EditAvatarForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditProfileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditProfileForm.Designer.cs">
+      <DependentUpon>EditProfileForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditAvatarForm.resx">
       <DependentUpon>EditAvatarForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditProfileForm.resx">
+      <DependentUpon>EditProfileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -189,6 +198,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DTO_LanChat\DTO_LanChat.csproj">
+      <Project>{34cccf19-9639-4505-a061-f199ac48c92e}</Project>
+      <Name>DTO_LanChat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Networking\Networking.csproj">
       <Project>{9dfd53cc-268e-4227-9ee9-d2755ab2783b}</Project>
       <Name>Networking</Name>
@@ -258,6 +271,7 @@
     </Content>
     <None Include="Resources\editptb.png" />
     <None Include="Resources\editptb2.png" />
+    <None Include="Resources\greenbtn.png" />
     <Content Include="Resources\o.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

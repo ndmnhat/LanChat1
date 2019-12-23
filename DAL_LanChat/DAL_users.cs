@@ -86,14 +86,22 @@ namespace DAL_LanChat
             using (SQLiteCommand SqlCmd = new SQLiteCommand(sql,conn))
             {
                 SqlCmd.Parameters.AddWithValue("@userid", userid);
-                using(SQLiteDataReader dataReader = SqlCmd.ExecuteReader())
+                using (SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(SqlCmd))
                 {
-                    dataReader.Read();
-                    user.userid = dataReader.GetInt32(0);
-                    user.username = dataReader.GetString(1);
-                    user.userpassword = dataReader.GetString(2);
-                    //user.userstatus = Convert.ToBoolean(dataReader.GetInt32(3));
-                    user.userip = dataReader.GetString(4);
+                    using (DataTable table = new DataTable())
+                    {
+                        dataAdapter.Fill(table);
+                        user.userid = Convert.ToInt32(table.Rows[0].Field<object>("userid"));
+                        user.username = Convert.ToString(table.Rows[0].Field<object>("username"));
+                        user.userpassword = Convert.ToString(table.Rows[0].Field<object>("userpassword"));
+                        user.userstatus = Convert.ToBoolean(table.Rows[0].Field<object>("userstatus"));
+                        user.userip = Convert.ToString(table.Rows[0].Field<object>("userip"));
+                        user.userfullname = Convert.ToString(table.Rows[0].Field<object>("userfullname"));
+                        user.usergender = Convert.ToString(table.Rows[0].Field<object>("usergender"));
+                        user.userbirthday = Convert.ToDateTime(table.Rows[0].Field<object>("userbirthday"));
+                        user.userphonenumber = Convert.ToString(table.Rows[0].Field<object>("userphonenumber"));
+                        user.useravatar = byteArrayToImage((byte[])table.Rows[0].Field<object>("useravatar"));
+                    }
                 }
             }
             //dataReader.Read();
@@ -129,12 +137,13 @@ namespace DAL_LanChat
             using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@value", value);
-                using (SQLiteDataReader dataReader = sqlCmd.ExecuteReader())
+                using (SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(sqlCmd))
                 {
-                    id = new int[dataReader.StepCount];
-                    for (int i = 0; dataReader.Read(); ++i)
+                    dataAdapter.Fill(table);
+                    id = new int[table.Rows.Count];
+                    for (int i = 0; i < table.Rows.Count; ++i)
                     {
-                        id[i] = dataReader.GetInt32(0);
+                        id[i] = Convert.ToInt32(table.Rows[i].Field<object>("userid"));
                     }
                 }
             }
@@ -160,12 +169,16 @@ namespace DAL_LanChat
         }
         byte[] imageToByteArray(System.Drawing.Image imageIn)
         {
+            if (imageIn == null)
+                return null;
             MemoryStream ms = new MemoryStream();
             imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
             return ms.ToArray();
         }
         Image byteArrayToImage(byte[] byteArrayIn)
         {
+            if (byteArrayIn == null)
+                return null;
             MemoryStream ms = new MemoryStream(byteArrayIn);
             Image returnImage = Image.FromStream(ms);
             return returnImage;
