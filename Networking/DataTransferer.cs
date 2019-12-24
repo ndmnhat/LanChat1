@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 using Packet;
 namespace Networking
 {
-    public static class DataTranferer
+    public static class DataTransferer
     {
         static UdpClient client = new UdpClient(52052);
 
@@ -85,6 +85,25 @@ namespace Networking
             catch (Exception exception)
             {
                 return new SocketPacket(PacketType.NONE, getlocalIP(), remoteip, 52052, remoteport, exception.Message);
+            }
+        }
+        public static void TcpSend(string remoteip, int remoteport, SocketPacket packet)
+        {
+            if (!tcpclient.Connected)
+                tcpclient.Connect(remoteip, remoteport);
+            try
+            {
+                byte[] data = Packet.SocketPacket.SerializedItem(packet);
+                byte[] datalength = Packet.SocketPacket.SerializedItem(new SocketPacket(PacketType.PACKETLENGTH, getlocalIP(), remoteip, 52055, 52056, data.Length));
+                NetworkStream stream = tcpclient.GetStream();
+                stream.Write(datalength, 0, datalength.Length);
+                byte[] buffer = new byte[310];
+                stream.Read(buffer, 0, buffer.Length);
+                if (Packet.SocketPacket.DeSerializedItem(buffer).Message == "OK")
+                    stream.Write(data, 0, data.Length);
+            }
+            catch (Exception)
+            {
             }
         }
     }

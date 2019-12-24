@@ -12,9 +12,16 @@ namespace DAL_LanChat
 {
     public class DAL_users : dbConnection
     {
-        public DataTable GetAllUsers()
+        public DAL_users()
         {
             conn.Open();
+        }
+        ~DAL_users()
+        {
+            conn.Close();    
+        }
+        public DataTable GetAllUsers()
+        {
             SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM users", conn);
             DataTable table = new DataTable();
             da.Fill(table);
@@ -23,7 +30,7 @@ namespace DAL_LanChat
         }
         public DataTable GetUsersWith(string Attribute, object value)
         {
-            conn.Open();
+            //conn.Open();
             DataTable table = new DataTable();
             string sql = "SELECT * FROM users WHERE "+ Attribute +" = @value";
             using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, conn))
@@ -34,12 +41,12 @@ namespace DAL_LanChat
                     sqlAdapter.Fill(table);
                 }
             }
-            conn.Close();
+            //conn.Close();
             return table;
         }
         public void InsertUsers(DTO_users user)
         {
-            conn.Open();
+            //conn.Open();
             string sql = "INSERT INTO users (username,userstatus,userip,userpassword) VALUES (@username,@userstatus,@userip,@userpassword)";
             using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, conn))
             {
@@ -50,12 +57,12 @@ namespace DAL_LanChat
                 sqlCmd.Prepare();
                 sqlCmd.ExecuteNonQuery();
             }
-            conn.Close();
+            //conn.Close();
         }
         public void UpdateUsers(DTO_users user)
         {
-            conn.Open();
-            string sql = "UPDATE users SET username = @username, userstatus = @userstatus, userip = @userip, useravatar = @useravatar WHERE userid = @userid";
+            //conn.Open();
+            string sql = "UPDATE users SET username = @username, userfullname = @userfullname, userbirthday = @userbirthday, usergender = @usergender, userphonenumber = @userphonenumber, userstatus = @userstatus, userip = @userip, useravatar = @useravatar WHERE userid = @userid";
             using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@username", user.username);
@@ -63,25 +70,29 @@ namespace DAL_LanChat
                 sqlCmd.Parameters.AddWithValue("@userip", user.userip);
                 sqlCmd.Parameters.AddWithValue("@userid", user.userid);
                 sqlCmd.Parameters.AddWithValue("@useravatar", imageToByteArray(user.useravatar));
+                sqlCmd.Parameters.AddWithValue("@userfullname", user.userfullname);
+                sqlCmd.Parameters.AddWithValue("@usergender", user.usergender);
+                sqlCmd.Parameters.AddWithValue("@userbirthday", user.userbirthday.ToString());
+                sqlCmd.Parameters.AddWithValue("@userphonenumber", user.userphonenumber);
                 sqlCmd.ExecuteNonQuery();
             }
-            conn.Close();
+            //conn.Close();
         }
         public void DeleteUsers(int userid)
         {
-            conn.Open();
+            //conn.Open();
             string sql = "DELETE FROM users WHERE userid = @userid";
             using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, conn))
             {
                 sqlCmd.Parameters.AddWithValue("@userid", userid);
                 sqlCmd.ExecuteNonQuery();
             }
-            conn.Close();
+            //conn.Close();
         }
         public DTO_users GetUsers(int userid)
         {
             DTO_users user = new DTO_users();
-            conn.Open();
+            //conn.Open();
             string sql = "SELECT * FROM users WHERE userid = @userid";
             using (SQLiteCommand SqlCmd = new SQLiteCommand(sql,conn))
             {
@@ -112,12 +123,12 @@ namespace DAL_LanChat
             //user.userip = dataReader.GetString(4);
             //if(dataTable.Rows[0].Field<byte[]>("useravatar")!=null)
             //    user.useravatar = byteArrayToImage(dataTable.Rows[0].Field<byte[]>("useravatar"));
-            conn.Close();
+            //conn.Close();
             return user;
         }
         public bool isUsersHave(string Attribute, object value)
         {
-            conn.Open();
+            //conn.Open();
             bool check;
             string sql = string.Format("SELECT COUNT(*) FROM users WHERE "+ Attribute +" = @value");
             using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
@@ -125,12 +136,13 @@ namespace DAL_LanChat
                 cmd.Parameters.AddWithValue("@value", value);
                 check = Convert.ToBoolean(cmd.ExecuteScalar());
             }
-            conn.Close();
+            //conn.Close();
             return check;
         }
         public int[] GetUsersID(string Attribute,object value)
         {
-            conn.Open();
+            //conn.State = ConnectionState.
+            //conn.Open();
             DataTable table = new DataTable();
             int[] id;
             string sql = "SELECT * FROM users WHERE "+ Attribute +" = @value";
@@ -147,12 +159,12 @@ namespace DAL_LanChat
                     }
                 }
             }
-            conn.Close();
+            //conn.Close();
             return id;
         }
         public void UpdateUsers(int id, string Attribute, object value)
         {
-            conn.Open();
+            //conn.Open();
             string sql = "UPDATE users SET "+ Attribute +" = @val WHERE userid = " + id;
             using (SQLiteCommand sqlCmd = new SQLiteCommand(sql, conn))
             {
@@ -165,7 +177,7 @@ namespace DAL_LanChat
                 sqlCmd.Prepare();
                 int k = sqlCmd.ExecuteNonQuery();
             }
-            conn.Close();
+            //conn.Close();
         }
         byte[] imageToByteArray(System.Drawing.Image imageIn)
         {

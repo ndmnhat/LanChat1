@@ -150,6 +150,7 @@
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(83, 29);
             this.btnUpdate.TabIndex = 5;
+            this.btnUpdate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnUpdate_MouseClick);
             // 
             // btnCancel
             // 
@@ -160,6 +161,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(83, 29);
             this.btnCancel.TabIndex = 5;
+            this.btnCancel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnCancel_MouseClick);
             // 
             // EditProfileForm
             // 

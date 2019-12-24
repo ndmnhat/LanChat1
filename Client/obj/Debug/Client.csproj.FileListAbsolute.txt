@@ -31,3 +31,4 @@ C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.EditAvatarForm.resou
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.EditProfileForm.resources
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\DTO_LanChat.dll
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\DTO_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.StickerForm.resources

@@ -123,6 +123,12 @@
       <DependentUpon>SettingDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="StickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StickerForm.Designer.cs">
+      <DependentUpon>StickerForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Caro.resx">
       <DependentUpon>Caro.cs</DependentUpon>
     </EmbeddedResource>
@@ -168,6 +174,9 @@
     </Compile>
     <EmbeddedResource Include="SettingDialog.resx">
       <DependentUpon>SettingDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StickerForm.resx">
+      <DependentUpon>StickerForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>

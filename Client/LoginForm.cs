@@ -77,7 +77,7 @@ namespace Client
             //this.Visible = false;
 
             SocketPacket packet = new SocketPacket(PacketType.REQCON, localIP, serverip, 52052, 52054, txbUsername.textbox.Text, "", txbPassword.textbox.Text, 0); ;
-            SocketPacket returnpacket = DataTranferer.SendAndReceive(serverip, 52054, packet);
+            SocketPacket returnpacket = DataTransferer.SendAndReceive(serverip, 52054, packet);
             if (returnpacket.Message == "OK")
             {
                 this.Hide();
@@ -138,7 +138,7 @@ namespace Client
                 return;
             }
             SocketPacket packet = new SocketPacket(PacketType.REG, localIP, serverip, 52052, 52054, txbSignUpUsername.textbox.Text, "", txbSignUpPassword.textbox.Text, 0);
-            SocketPacket returnpacket = DataTranferer.SendAndReceive(serverip, 52054, packet);
+            SocketPacket returnpacket = DataTransferer.SendAndReceive(serverip, 52054, packet);
             if (returnpacket.Message == "OK")
                 MessageBox.Show("You have successfully registered!");
             else

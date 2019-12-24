@@ -22,6 +22,7 @@ namespace Client
     public partial class MainForm : Form
     {
         UdpClient receiver = new UdpClient(52053);
+        TcpListener tcpreceiver = new TcpListener(IPAddress.Parse(getlocalIP()), 52057);
         public string serverip { get; private set; }
         public string name { get; private set; }
         List<Tiles> FriendListTiles = new List<Tiles>();
@@ -54,16 +55,15 @@ namespace Client
         {
             
             Task.Run(() => ReceiveFromServer());
+            Task.Run(() => TcpReceiveFromServer());
             label1.Text = name;
             SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
             while (true)
                 if (isConnected)
                 { Task.Delay(1000); break; }
-            DataTranferer.Send(serverip, 52054, reqfriendpacket);
-            SocketPacket reqprofilepacket = new SocketPacket(PacketType.REQPROFILE, getlocalIP(), name);
-            DataTranferer.Send(serverip, 52054, reqprofilepacket);
-            SocketPacket reqavatarpacket = new SocketPacket(PacketType.REQAVATAR, getlocalIP(), name);
-            DataTranferer.Send(serverip, 52054, reqavatarpacket);
+            DataTransferer.Send(serverip, 52054, reqfriendpacket);
+            SocketPacket returnpacket = DataTransferer.TcpSendAndReceive(serverip,52056, new SocketPacket(PacketType.REQPROFILE, getlocalIP(), name));
+            UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
         }
 
         private void ptbClose_MouseEnter(object sender, EventArgs e)
@@ -175,27 +175,53 @@ namespace Client
                         UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message),returnpacket.MessageRow));
                         break;
 
-                    case PacketType.UPDATEAVATAR:
-                        this.ptbAvatar.BackgroundImage = CropImage(returnpacket.image);
-                        break;
-
                     case PacketType.REQAVATAR:
                         break;
 
+                    case PacketType.UPDATEPROFILE:
                     case PacketType.REQPROFILE:
                         UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
                         break;
                 }
             }
-
         }
-
+        private void TcpReceiveFromServer()
+        {
+            tcpreceiver.Start();
+            while (true)
+            {
+                TcpClient client = new TcpClient();
+                client = tcpreceiver.AcceptTcpClient();
+                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                client.LingerState = new LingerOption(true, 0);
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[316];
+                while (stream.Read(buffer, 0, buffer.Length) == 0) { }
+                SocketPacket LengthPacket = SocketPacket.DeSerializedItem(buffer);
+                byte[] buffer2 = new byte[LengthPacket.PacketLength];
+                SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), LengthPacket.SenderIP, 52057, 52058, "OK");
+                stream.Write(Packet.SocketPacket.SerializedItem(response), 0, Packet.SocketPacket.SerializedItem(response).Length);
+                while (stream.Read(buffer2, 0, buffer2.Length) == 0)
+                { }
+                SocketPacket returnpacket = SocketPacket.DeSerializedItem(buffer2);
+                switch (returnpacket.packetType)
+                {
+                    case PacketType.IMG:
+                        UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message), returnpacket.MessageRow));
+                        break;
+                    case PacketType.UPDATEAVATAR:
+                        this.ptbAvatar.BackgroundImage = CropImage(returnpacket.image);
+                        break;
+                }
+                client.Client.Disconnect(true);
+                client.Close();
+            }
+        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SocketPacket disconnect = new SocketPacket(PacketType.DISCON, getlocalIP(), serverip, 52052, 52054);
-            DataTranferer.Send(serverip, 52052, disconnect);
+            DataTransferer.Send(serverip, 52052, disconnect);
         }
-        bool open = false;
 
         private void panel2_MouseEnter(object sender, EventArgs e)
         {
@@ -226,7 +252,7 @@ namespace Client
                 EditAvatarForm editform = new EditAvatarForm(image);
                 if(editform.ShowDialog() == DialogResult.OK)
                 {
-                    DataTranferer.Send(serverip, 52054, new SocketPacket(PacketType.UPDATEAVATAR, getlocalIP(), serverip, 52052, 52054, name, image));
+                    DataTransferer.TcpSend(serverip, 52054, new SocketPacket(PacketType.UPDATEAVATAR, getlocalIP(), serverip, 52055, 52056, name, image));
                 }
             }
         }
@@ -254,8 +280,17 @@ namespace Client
 
         private void btneditprofile_MouseClick(object sender, MouseEventArgs e)
         {
-            EditProfileForm editform = new EditProfileForm();
-            editform.ShowDialog();
+            string name = lblFullName.Text.Split(new string[1] { ": " },StringSplitOptions.None)[1];
+            string gender = lblGender.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1];
+            DateTime birthday = Convert.ToDateTime(lblBirthday.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1]);
+            string phone = lblPhone.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1];
+            EditProfileForm editform = new EditProfileForm(name,gender,birthday,phone);
+            if (editform.ShowDialog() == DialogResult.OK)
+            {
+                DTO_users user = new DTO_users(0, this.name, editform.name, editform.gender, editform.birthday, editform.phone);
+                SocketPacket packet = new SocketPacket(PacketType.UPDATEPROFILE, getlocalIP(), serverip, 52052, 52054, this.name, user);
+                DataTransferer.Send(serverip, 52054, packet);
+            }
         }
         private void UpdateProfile(string name, string gender, DateTime birthday, string phone, Image avatar)
         {

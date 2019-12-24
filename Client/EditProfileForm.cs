@@ -12,7 +12,11 @@ namespace Client
 {
     public partial class EditProfileForm : Form
     {
-        public EditProfileForm()
+        public string name { get { return txbName.Text; } }
+        public string gender { get { return cbbGender.Text; } }
+        public DateTime birthday { get { return dtpBirthday.Value; } }
+        public string phone { get { return txbPhone.Text; } }
+        public EditProfileForm(string name, string gender, DateTime birthday, string phone)
         {
             InitializeComponent();
             btnUpdate.font = new Font("Teko", 14.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -24,6 +28,23 @@ namespace Client
             btnCancel.textcolor = Color.Black;
             btnCancel.ButtonText = "Cancel";
             btnCancel.lowertext = 3;
+
+            txbName.Text = name;
+            txbPhone.Text = phone;
+            cbbGender.SelectedItem = gender;
+            dtpBirthday.Value = birthday;
+        }
+
+        private void btnCancel_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void btnUpdate_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

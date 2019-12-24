@@ -124,6 +124,15 @@ namespace Server
                 case PacketType.MESSAGETABLE:
                     MESSAGETABLE_packet_process(packet, client);
                     break;
+                case PacketType.IMG:
+                    IMG_packet_process(packet, client);
+                    break;
+                case PacketType.REQPROFILE:
+                    REQPROFILE_packet_process(packet, client);
+                    break;
+                case PacketType.UPDATEAVATAR:
+                    UPDATEAVATAR_packet_process(packet, client);
+                    break;
             }
         }
         private void ProcessPacket(SocketPacket packet)
@@ -131,9 +140,9 @@ namespace Server
             
             switch(packet.packetType)
             {
-                case PacketType.UPDATEAVATAR:
-                    UPDATEAVATAR_packet_process(packet);
-                    break;
+                //case PacketType.UPDATEAVATAR:
+                //    UPDATEAVATAR_packet_process(packet);
+                //    break;
 
                 case PacketType.REQCON:
                     REQCON_packet_process(packet);
@@ -162,17 +171,57 @@ namespace Server
                     REG_packet_process(packet);
                     break;
 
-                case PacketType.REQPROFILE:
-                    REQPROFILE_packet_process(packet);
+                case PacketType.UPDATEPROFILE:
+                    UPDATEPROFILE_packet_process(packet);
                     break;
 
-                case PacketType.IMG:
-                    IMG_packet_process(packet);
+                case PacketType.STICKER:
+                    STICKER_packet_process(packet);
                     break;
+                //case PacketType.REQPROFILE:
+                //    REQPROFILE_packet_process(packet);
+                //    break;
+
+                //case PacketType.IMG:
+                //    IMG_packet_process(packet);
+                //    break;
 
                 default:break;
             }
         }
+
+        private void STICKER_packet_process(SocketPacket packet)
+        {
+            SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
+            int user1id = UsersBUS.GetUsersID(packet.SenderName);
+            int user2id = UsersBUS.GetUsersID(packet.ReceiverName);
+            string user1ip = packet.SenderIP;
+            string user2ip = UsersBUS.GetUsersWith("username", packet.ReceiverName).Rows[0].Field<string>("userip");
+            DTO_mess mess = new DTO_mess(0, user1id, user2id, packet.Message, packet.MessageType, DateTime.Now);
+            MessBUS.InsertMess(mess);
+            response.packetType = PacketType.REQUPDATEMESS;
+            response.MessageRow = MessBUS.GetLastMess(user1id, user2id);
+            response.Message = user2id.ToString();
+            response.MessageType = 2;
+            byte[] data3 = SocketPacket.SerializedItem(response);
+            sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
+            sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user2ip), 52053));
+        }
+
+        private void UPDATEPROFILE_packet_process(SocketPacket packet)
+        {
+            DTO_users userinfo = UsersBUS.GetUsers(UsersBUS.GetUsersID(packet.SenderName));
+            userinfo.userfullname = packet.userinfo.userfullname;
+            userinfo.usergender = packet.userinfo.usergender;
+            userinfo.userbirthday = packet.userinfo.userbirthday;
+            userinfo.userphonenumber = packet.userinfo.userphonenumber;
+            UsersBUS.UpdateUsers(userinfo);
+            userinfo.useravatar = null;
+            SocketPacket response = new SocketPacket(PacketType.UPDATEPROFILE, getlocalIP(), packet.SenderIP, 52054, 52052, packet.SenderName, userinfo);
+            byte[] data = SocketPacket.SerializedItem(response);
+            server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), 52053));
+        }
+
         public void REQCON_packet_process(SocketPacket packet)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
@@ -255,24 +304,33 @@ namespace Server
             byte[] data = SocketPacket.SerializedItem(response);
             server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
         }
-        public void UPDATEAVATAR_packet_process(SocketPacket packet)
+        public void UPDATEAVATAR_packet_process(SocketPacket packet, TcpClient client)
         {
             UsersBUS.UpdateUsers(UsersBUS.GetUsersID("username", packet.SenderName)[0], "useravatar", packet.image);
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52051, 52053);
             response.packetType = PacketType.UPDATEAVATAR;
             response.SenderName = packet.SenderName;
             response.image = packet.image;
-            byte[] data = SocketPacket.SerializedItem(response);
-            sendserver.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), 52053));
+            tcpsender = new TcpClient();
+            try
+            {
+                tcpsender = new TcpClient();
+                tcpsender.Connect(IPAddress.Parse(packet.SenderIP), 52057);
+                TcpSendPacket(response, tcpsender);
+                tcpsender.Close();
+            }
+            catch (Exception exception)
+            {
+                label3.Text = exception.Message;
+            }
         }
-        public void REQPROFILE_packet_process(SocketPacket packet)
+        public void REQPROFILE_packet_process(SocketPacket packet, TcpClient client)
         {
             DTO_users user = UsersBUS.GetUsers(UsersBUS.GetUsersID(packet.SenderName));
             SocketPacket response = new SocketPacket(PacketType.REQPROFILE, getlocalIP(), packet.SenderIP, 52054, 52053,packet.SenderName,user);
-            byte[] data = SocketPacket.SerializedItem(response);
-            sendserver.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), 52053));
+            TcpSendPacket(response, client);
         }
-        public void IMG_packet_process(SocketPacket packet)
+        public void IMG_packet_process(SocketPacket packet, TcpClient client)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             int user1id = UsersBUS.GetUsersID(packet.SenderName);
@@ -284,10 +342,21 @@ namespace Server
             response.packetType = PacketType.REQUPDATEMESS;
             response.MessageRow = MessBUS.GetLastMess(user1id, user2id);
             response.Message = user2id.ToString();
-            response.MessageType = 1;
-            byte[] data3 = SocketPacket.SerializedItem(response);
-            sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
-            sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user2ip), 52053));
+            response.MessageType = 3;
+            TcpSendPacket(response, client);
+            try
+            {
+                tcpsender = new TcpClient();
+                tcpsender.Connect(IPAddress.Parse(user2ip), 52057);
+                TcpSendPacket(response, tcpsender);
+                tcpsender.Close();
+            }
+            catch (Exception exception)
+            {
+                label3.Text = exception.Message;
+            }
+            //sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
+            //sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user2ip), 52053));
         }
         private void TcpSendPacket(SocketPacket packet, TcpClient client)
         {

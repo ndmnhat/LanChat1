@@ -129,6 +129,7 @@
             this.ptbxSticker.Size = new System.Drawing.Size(34, 30);
             this.ptbxSticker.TabIndex = 8;
             this.ptbxSticker.TabStop = false;
+            this.ptbxSticker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ptbxSticker_MouseClick);
             // 
             // ptbxImage
             // 

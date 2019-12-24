@@ -28,6 +28,7 @@ namespace Packet
         public DataTable MessageTable { get; set; }
         public DataTable MessageRow { get; set; }
         public DTO_users userinfo { get; set; }
+        
         public SocketPacket()
         {
             packetType = PacketType.NONE;
@@ -155,7 +156,7 @@ namespace Packet
             info.AddValue("PacketType", packetType, typeof(PacketType));
             switch(packetType)
             {
-                case PacketType.UPDATEPROFILE:
+                case PacketType.UPDATEAVATAR:
                     info.AddValue("SenderName", SenderName, typeof(string));
                     info.AddValue("Image", image, typeof(Image));
                     break;
@@ -168,6 +169,7 @@ namespace Packet
                     info.AddValue("MessageRow", MessageRow, typeof(DataTable));
                     break;
 
+                case PacketType.STICKER:
                 case PacketType.MESSAGE:
                     info.AddValue("Msg", Message, typeof(string));
                     info.AddValue("SenderName", SenderName, typeof(string));
@@ -200,6 +202,7 @@ namespace Packet
                     info.AddValue("Image", image, typeof(Bitmap));
                     break;
 
+                case PacketType.UPDATEPROFILE:
                 case PacketType.REQPROFILE:
                     info.AddValue("SenderName", SenderName, typeof(string));
                     info.AddValue("userinfo", userinfo, typeof(DTO_users));
@@ -230,7 +233,7 @@ namespace Packet
             ReceiverPort = (int)info.GetValue("ReceiverPort", typeof(int));
             switch (packetType)
             {
-                case PacketType.UPDATEPROFILE:
+                case PacketType.UPDATEAVATAR:
                     SenderName = (string)info.GetValue("SenderName", typeof(string));
                     image = (Bitmap)info.GetValue("Image", typeof(Bitmap));
                     break;
@@ -243,6 +246,7 @@ namespace Packet
                     MessageRow = (DataTable)info.GetValue("MessageRow", typeof(DataTable));
                     break;
 
+                case PacketType.STICKER:
                 case PacketType.MESSAGE:
                     Message = (string)info.GetValue("Msg", typeof(string));
                     SenderName = (string)info.GetValue("SenderName", typeof(string));
@@ -262,6 +266,7 @@ namespace Packet
                     SenderName = (string)info.GetValue("SenderName", typeof(string));
                     Message = (string)info.GetValue("Msg", typeof(string));
                     break;
+
                 case PacketType.REQFRIEND:
                     Message = (string)info.GetValue("Msg", typeof(string));
                     break;
@@ -272,6 +277,7 @@ namespace Packet
                     image = (Bitmap)info.GetValue("Image", typeof(Bitmap));
                     break;
 
+                case PacketType.UPDATEPROFILE:
                 case PacketType.REQPROFILE:
                     SenderName = (string)info.GetValue("SenderName", typeof(string));
                     userinfo = (DTO_users)info.GetValue("userinfo", typeof(DTO_users));
@@ -320,6 +326,7 @@ namespace Packet
         DISCON,
         MESSAGETABLE,
         MESSAGE,
+        STICKER,
         UPDATEPROFILE,
         UPDATEAVATAR,
         REQPROFILE,
