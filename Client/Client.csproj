@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,8 +45,27 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Caro.designer.cs">
+      <DependentUpon>Caro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomButton.Designer.cs">
+      <DependentUpon>CustomButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomLoginTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControl\CustomLoginTextBox.Designer.cs">
+      <DependentUpon>CustomLoginTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControl\CustomRichTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -63,6 +83,18 @@
     </Compile>
     <Compile Include="CustomControl\Tiles.Designer.cs">
       <DependentUpon>Tiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditAvatarForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditAvatarForm.Designer.cs">
+      <DependentUpon>EditAvatarForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditProfileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditProfileForm.Designer.cs">
+      <DependentUpon>EditProfileForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -90,6 +122,22 @@
     <Compile Include="SettingDialog.Designer.cs">
       <DependentUpon>SettingDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="StickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StickerForm.Designer.cs">
+      <DependentUpon>StickerForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Caro.resx">
+      <DependentUpon>Caro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomButton.resx">
+      <DependentUpon>CustomButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControl\CustomLoginTextBox.resx">
+      <DependentUpon>CustomLoginTextBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\CustomRichTextBox.resx">
       <DependentUpon>CustomRichTextBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +146,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControl\Tiles.resx">
       <DependentUpon>Tiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditAvatarForm.resx">
+      <DependentUpon>EditAvatarForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditProfileForm.resx">
+      <DependentUpon>EditProfileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -121,8 +175,11 @@
     <EmbeddedResource Include="SettingDialog.resx">
       <DependentUpon>SettingDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="StickerForm.resx">
+      <DependentUpon>StickerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -150,6 +207,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DTO_LanChat\DTO_LanChat.csproj">
+      <Project>{34cccf19-9639-4505-a061-f199ac48c92e}</Project>
+      <Name>DTO_LanChat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Networking\Networking.csproj">
       <Project>{9dfd53cc-268e-4227-9ee9-d2755ab2783b}</Project>
       <Name>Networking</Name>
@@ -191,6 +252,41 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\minimizewhite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logintextbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\roundbutton1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dotLine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\searchtextbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tiles.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tiles2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tiles3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\caro.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\editptb.png" />
+    <None Include="Resources\editptb2.png" />
+    <None Include="Resources\greenbtn.png" />
+    <Content Include="Resources\o.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

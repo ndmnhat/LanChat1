@@ -21,3 +21,14 @@ C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.PrivateChat.resource
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomRichTextBox.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomTextBox.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.SettingDialog.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomLoginTextBox.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomButton.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.Caro.resources
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\caro.png
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\o.png
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\x.png
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.EditAvatarForm.resources
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.EditProfileForm.resources
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\DTO_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\DTO_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.StickerForm.resources

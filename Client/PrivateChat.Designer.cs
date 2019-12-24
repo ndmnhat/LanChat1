@@ -31,20 +31,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrivateChat));
             this.pnChat = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ptbxGame = new System.Windows.Forms.PictureBox();
             this.ptbxClose = new System.Windows.Forms.PictureBox();
             this.ptbxMinimize = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ptbxGame = new System.Windows.Forms.PictureBox();
             this.ptbxSticker = new System.Windows.Forms.PictureBox();
             this.ptbxImage = new System.Windows.Forms.PictureBox();
             this.ptbxFile = new System.Windows.Forms.PictureBox();
             this.customTextBox1 = new Client.CustomControl.CustomTextBox();
             this.customRichTextBox1 = new Client.CustomControl.CustomRichTextBox();
             this.pnChat.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptbxGame)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxMinimize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptbxGame)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxSticker)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxFile)).BeginInit();
@@ -73,28 +73,6 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Private Chat: ";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BackgroundImage = global::Client.Properties.Resources.btnsend;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(485, 407);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(59, 56);
-            this.pictureBox1.TabIndex = 11;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnSend_MouseClick);
-            // 
-            // ptbxGame
-            // 
-            this.ptbxGame.BackgroundImage = global::Client.Properties.Resources.game;
-            this.ptbxGame.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ptbxGame.Location = new System.Drawing.Point(152, 474);
-            this.ptbxGame.Name = "ptbxGame";
-            this.ptbxGame.Size = new System.Drawing.Size(34, 30);
-            this.ptbxGame.TabIndex = 10;
-            this.ptbxGame.TabStop = false;
-            // 
             // ptbxClose
             // 
             this.ptbxClose.BackColor = System.Drawing.Color.Transparent;
@@ -120,6 +98,28 @@
             this.ptbxMinimize.TabIndex = 5;
             this.ptbxMinimize.TabStop = false;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BackgroundImage = global::Client.Properties.Resources.btnsend;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(485, 407);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(59, 56);
+            this.pictureBox1.TabIndex = 11;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnSend_MouseClick);
+            // 
+            // ptbxGame
+            // 
+            this.ptbxGame.BackgroundImage = global::Client.Properties.Resources.game;
+            this.ptbxGame.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ptbxGame.Location = new System.Drawing.Point(152, 474);
+            this.ptbxGame.Name = "ptbxGame";
+            this.ptbxGame.Size = new System.Drawing.Size(34, 30);
+            this.ptbxGame.TabIndex = 10;
+            this.ptbxGame.TabStop = false;
+            // 
             // ptbxSticker
             // 
             this.ptbxSticker.BackgroundImage = global::Client.Properties.Resources.sticker;
@@ -129,6 +129,7 @@
             this.ptbxSticker.Size = new System.Drawing.Size(34, 30);
             this.ptbxSticker.TabIndex = 8;
             this.ptbxSticker.TabStop = false;
+            this.ptbxSticker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ptbxSticker_MouseClick);
             // 
             // ptbxImage
             // 
@@ -139,6 +140,7 @@
             this.ptbxImage.Size = new System.Drawing.Size(34, 30);
             this.ptbxImage.TabIndex = 6;
             this.ptbxImage.TabStop = false;
+            this.ptbxImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ptbxImage_MouseClick);
             // 
             // ptbxFile
             // 
@@ -190,10 +192,10 @@
             this.Load += new System.EventHandler(this.PrivateChat_Load);
             this.pnChat.ResumeLayout(false);
             this.pnChat.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptbxGame)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxMinimize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptbxGame)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxSticker)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbxFile)).EndInit();

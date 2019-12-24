@@ -17,6 +17,8 @@ namespace Client
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
+            ServerIP = Client.Properties.Settings.Default.ServerIP;
+            textBox1.Text = ServerIP;
         }
 
         private void btnOK_MouseClick(object sender, MouseEventArgs e)

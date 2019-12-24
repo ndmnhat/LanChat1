@@ -20,24 +20,22 @@ namespace Client.CustomControl
 
         private void Tiles_MouseEnter(object sender, EventArgs e)
         {
-            this.BorderStyle = BorderStyle.FixedSingle;
-            this.BackColor = Color.Turquoise;
+            this.BackgroundImage = global::Client.Properties.Resources.tiles2;
         }
 
         private void Tiles_MouseLeave(object sender, EventArgs e)
         {
-            this.BorderStyle = BorderStyle.None;
-            this.BackColor = Color.PaleTurquoise;
+            this.BackgroundImage = global::Client.Properties.Resources.tiles;
         }
 
         private void Tiles_MouseDown(object sender, MouseEventArgs e)
         {
-            this.BackColor = Color.MediumTurquoise;
+            this.BackgroundImage = global::Client.Properties.Resources.tiles3;
         }
 
         private void Tiles_MouseUp(object sender, MouseEventArgs e)
         {
-            this.BackColor = Color.Turquoise;
+            this.BackgroundImage = global::Client.Properties.Resources.tiles2;
         }
     }
 }

@@ -13,18 +13,24 @@ using System.Net;
 using Packet;
 using Networking;
 using Client.CustomControl;
+using DTO_LanChat;
 using System.Threading;
+using System.Drawing.Drawing2D;
 namespace Client
 {
     public delegate void MessageEventHandler(object sender, UpdateEventArgs e);
     public partial class MainForm : Form
     {
+        UdpClient receiver = new UdpClient(52053);
+        TcpListener tcpreceiver = new TcpListener(IPAddress.Parse(getlocalIP()), 52057);
         public string serverip { get; private set; }
         public string name { get; private set; }
         List<Tiles> FriendListTiles = new List<Tiles>();
         public event MessageEventHandler UpdateMessageRequest;
+        bool isConnected = false;
         public MainForm()
         {
+            CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
         }
         public MainForm(string svip, string username)
@@ -34,22 +40,30 @@ namespace Client
             serverip = svip;
             name = username;
 
-            //SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
-            //DataTranferer.Send(serverip, 52054, reqfriendpacket);
-            //ThreadStart receivethread = new ThreadStart(ReceiveFromServer);
-            //Thread thread1 = new Thread(receivethread);
-            //thread1.IsBackground = true;
-            //thread1.Start();
+            LoadCustom();
         }
+        private void LoadCustom()
+        {
+            ptbAvatar.BackgroundImage = CropImage(Image.FromFile("a.jpg"));
+            btneditprofile.font = new Font("Teko", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            btneditprofile.textcolor = Color.Black;
+            btneditprofile.ButtonText = "Edit profile";
+            btneditprofile.lowertext = 3;
 
+        }
         private void MainForm_Load(object sender, EventArgs e)
         {
+            
+            Task.Run(() => ReceiveFromServer());
+            Task.Run(() => TcpReceiveFromServer());
+            label1.Text = name;
             SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
-            DataTranferer.Send(serverip, 52054, reqfriendpacket);
-            ThreadStart receivethread = new ThreadStart(ReceiveFromServer);
-            Thread thread1 = new Thread(receivethread);
-            thread1.IsBackground = true;
-            thread1.Start();
+            while (true)
+                if (isConnected)
+                { Task.Delay(1000); break; }
+            DataTransferer.Send(serverip, 52054, reqfriendpacket);
+            SocketPacket returnpacket = DataTransferer.TcpSendAndReceive(serverip,52056, new SocketPacket(PacketType.REQPROFILE, getlocalIP(), name));
+            UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
         }
 
         private void ptbClose_MouseEnter(object sender, EventArgs e)
@@ -123,14 +137,14 @@ namespace Client
                 Tiles friendtiles = new Tiles();
                 friendtiles.TilesName.Text = subsubst[0];
                 friendtiles.TilesIP = subsubst[1];
-                friendtiles.Location = new Point(253 + 187 * (i % 3), 40 + 187 * (i / 3));
-                friendtiles.Size = new Size(147, 147);
+                friendtiles.Location = new Point(30 + 164 * (i % 3), 0 + 177 * (i / 3));
+                friendtiles.Size = new Size(114,107);
                 friendtiles.MouseClick += delegate (object sender, MouseEventArgs e) { Friendtiles_MouseClick(sender, e, this, subsubst[0]); };
                 FriendListTiles.Add(friendtiles);
                 //this.Controls.Add(FriendListTiles[i]);
                 this.Invoke((MethodInvoker)delegate
                 {
-                    this.Controls.Add(FriendListTiles[i]);
+                    this.pnlFriend.Controls.Add(FriendListTiles[i]);
                 });
             }
         }
@@ -143,11 +157,11 @@ namespace Client
 
         private void ReceiveFromServer()
         {
-
-            UdpClient receiver = new UdpClient(52053);
+            //receiver.Client.ReceiveBufferSize = 1024 * 1024;
             while (true)
             {
                 IPEndPoint serveriPEnd = new IPEndPoint(IPAddress.Parse(serverip), 52051);
+                isConnected = true;
                 byte[] data = receiver.Receive(ref serveriPEnd);
                 SocketPacket returnpacket = SocketPacket.DeSerializedItem(data);
                 //MessageBox.Show(returnpacket.Message);
@@ -160,35 +174,53 @@ namespace Client
                     case PacketType.REQUPDATEMESS:
                         UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message),returnpacket.MessageRow));
                         break;
+
+                    case PacketType.REQAVATAR:
+                        break;
+
+                    case PacketType.UPDATEPROFILE:
+                    case PacketType.REQPROFILE:
+                        UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
+                        break;
                 }
             }
-
         }
-
+        private void TcpReceiveFromServer()
+        {
+            tcpreceiver.Start();
+            while (true)
+            {
+                TcpClient client = new TcpClient();
+                client = tcpreceiver.AcceptTcpClient();
+                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                client.LingerState = new LingerOption(true, 0);
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[316];
+                while (stream.Read(buffer, 0, buffer.Length) == 0) { }
+                SocketPacket LengthPacket = SocketPacket.DeSerializedItem(buffer);
+                byte[] buffer2 = new byte[LengthPacket.PacketLength];
+                SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), LengthPacket.SenderIP, 52057, 52058, "OK");
+                stream.Write(Packet.SocketPacket.SerializedItem(response), 0, Packet.SocketPacket.SerializedItem(response).Length);
+                while (stream.Read(buffer2, 0, buffer2.Length) == 0)
+                { }
+                SocketPacket returnpacket = SocketPacket.DeSerializedItem(buffer2);
+                switch (returnpacket.packetType)
+                {
+                    case PacketType.IMG:
+                        UpdateMessageRequest(this, new UpdateEventArgs(Int32.Parse(returnpacket.Message), returnpacket.MessageRow));
+                        break;
+                    case PacketType.UPDATEAVATAR:
+                        this.ptbAvatar.BackgroundImage = CropImage(returnpacket.image);
+                        break;
+                }
+                client.Client.Disconnect(true);
+                client.Close();
+            }
+        }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SocketPacket disconnect = new SocketPacket(PacketType.DISCON, getlocalIP(), serverip, 52052, 52054);
-            DataTranferer.Send(serverip, 52052, disconnect);
-        }
-        bool open = false;
-        private void panel2_MouseClick(object sender, MouseEventArgs e)
-        {
-            Task SlidePanel = new Task((Action)Slide);
-            SlidePanel.Start();
-        }
-        private void Slide()
-        {
-            open = !open;
-            if (open)
-            {
-                while (this.panel2.Location.X > -5)
-                    panel2.Location = new Point(panel2.Location.X - 1, panel2.Location.Y);
-            }
-            else
-            {
-                while (this.panel2.Location.X < 220)
-                    panel2.Location = new Point(panel2.Location.X + 1, panel2.Location.Y);
-            }
+            DataTransferer.Send(serverip, 52052, disconnect);
         }
 
         private void panel2_MouseEnter(object sender, EventArgs e)
@@ -199,6 +231,75 @@ namespace Client
         private void panel2_MouseLeave(object sender, EventArgs e)
         {
 
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            LinearGradientBrush brush = new LinearGradientBrush(panel1.ClientRectangle, ColorTranslator.FromHtml("#ee4540"), ColorTranslator.FromHtml("#801336"), LinearGradientMode.Vertical);
+            g.FillRectangle(brush, panel1.ClientRectangle);
+            g.Dispose();
+        }
+
+        private void ptbAvatar_MouseClick(object sender, MouseEventArgs e)
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
+            if(open.ShowDialog() == DialogResult.OK)
+            {
+                Bitmap image = new Bitmap(open.FileName);
+                EditAvatarForm editform = new EditAvatarForm(image);
+                if(editform.ShowDialog() == DialogResult.OK)
+                {
+                    DataTransferer.TcpSend(serverip, 52054, new SocketPacket(PacketType.UPDATEAVATAR, getlocalIP(), serverip, 52055, 52056, name, image));
+                }
+            }
+        }
+        Image CropImage(Image img)
+        {
+            int x = img.Width / 2;
+            int y = img.Height / 2;
+            int r = Math.Min(x, y);
+
+            Bitmap tmp = null;
+            tmp = new Bitmap(2 * r, 2 * r);
+            using (Graphics g = Graphics.FromImage(tmp))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TranslateTransform(tmp.Width / 2, tmp.Height / 2);
+                GraphicsPath gp = new GraphicsPath();
+                gp.AddEllipse(0 - r, 0 - r, 2 * r, 2 * r);
+                Region rg = new Region(gp);
+                g.SetClip(rg, CombineMode.Replace);
+                Bitmap bmp = new Bitmap(img);
+                g.DrawImage(bmp, new Rectangle(-r, -r, 2 * r, 2 * r), new Rectangle(x - r, y - r, 2 * r, 2 * r), GraphicsUnit.Pixel);
+            }
+            return tmp;
+        }
+
+        private void btneditprofile_MouseClick(object sender, MouseEventArgs e)
+        {
+            string name = lblFullName.Text.Split(new string[1] { ": " },StringSplitOptions.None)[1];
+            string gender = lblGender.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1];
+            DateTime birthday = Convert.ToDateTime(lblBirthday.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1]);
+            string phone = lblPhone.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1];
+            EditProfileForm editform = new EditProfileForm(name,gender,birthday,phone);
+            if (editform.ShowDialog() == DialogResult.OK)
+            {
+                DTO_users user = new DTO_users(0, this.name, editform.name, editform.gender, editform.birthday, editform.phone);
+                SocketPacket packet = new SocketPacket(PacketType.UPDATEPROFILE, getlocalIP(), serverip, 52052, 52054, this.name, user);
+                DataTransferer.Send(serverip, 52054, packet);
+            }
+        }
+        private void UpdateProfile(string name, string gender, DateTime birthday, string phone, Image avatar)
+        {
+            lblFullName.Text = "Name: " + name;
+            lblGender.Text = "Gender: " + gender;
+            lblBirthday.Text = "Birthday: " + birthday.ToShortDateString();
+            lblPhone.Text = "Phone: " + phone;
+            if (avatar != null)
+                ptbAvatar.BackgroundImage = CropImage(avatar);
         }
     }
     public class UpdateEventArgs : EventArgs
@@ -211,4 +312,5 @@ namespace Client
             newMessage = row;
         }
     }
+
 }

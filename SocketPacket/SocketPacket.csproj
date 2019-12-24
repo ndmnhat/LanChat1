@@ -46,5 +46,11 @@
     <Compile Include="SocketPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DTO_LanChat\DTO_LanChat.csproj">
+      <Project>{34cccf19-9639-4505-a061-f199ac48c92e}</Project>
+      <Name>DTO_LanChat</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
