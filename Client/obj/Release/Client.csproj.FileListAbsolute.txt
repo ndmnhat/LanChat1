@@ -72,3 +72,4 @@ C:\Users\Admin\source\repos\LanChat\Client\obj\Release\Client.exe
 C:\Users\Admin\source\repos\LanChat\Client\obj\Release\Client.pdb
 C:\Users\Admin\source\repos\LanChat\Client\bin\Release\Resources\btnsend.jpg
 C:\Users\Admin\source\repos\LanChat\Client\bin\Release\Resources\sampleavatar.jpg
+C:\Users\Admin\source\repos\LanChat\Client\bin\Release\Resources\chat.ico

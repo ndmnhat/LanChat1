@@ -25,5 +25,11 @@ namespace Client
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void btnCancel_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
     }
 }

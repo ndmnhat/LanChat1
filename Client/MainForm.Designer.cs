@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btneditprofile = new Client.CustomControl.CustomButton();
             this.lblPhone = new System.Windows.Forms.Label();
             this.lblBirthday = new System.Windows.Forms.Label();
             this.lblGender = new System.Windows.Forms.Label();
@@ -41,6 +41,7 @@
             this.ptbMinimize = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ptbClose = new System.Windows.Forms.PictureBox();
+            this.btneditprofile = new Client.CustomControl.CustomButton();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbAvatar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbMinimize)).BeginInit();
@@ -64,17 +65,6 @@
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
-            // 
-            // btneditprofile
-            // 
-            this.btneditprofile.BackColor = System.Drawing.Color.Transparent;
-            this.btneditprofile.BackgroundImage = global::Client.Properties.Resources.greenbtn;
-            this.btneditprofile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btneditprofile.Location = new System.Drawing.Point(75, 373);
-            this.btneditprofile.Name = "btneditprofile";
-            this.btneditprofile.Size = new System.Drawing.Size(120, 28);
-            this.btneditprofile.TabIndex = 4;
-            this.btneditprofile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btneditprofile_MouseClick);
             // 
             // lblPhone
             // 
@@ -206,6 +196,17 @@
             this.ptbClose.MouseEnter += new System.EventHandler(this.ptbClose_MouseEnter);
             this.ptbClose.MouseLeave += new System.EventHandler(this.ptbClose_MouseLeave);
             // 
+            // btneditprofile
+            // 
+            this.btneditprofile.BackColor = System.Drawing.Color.Transparent;
+            this.btneditprofile.BackgroundImage = global::Client.Properties.Resources.greenbtn;
+            this.btneditprofile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btneditprofile.Location = new System.Drawing.Point(75, 373);
+            this.btneditprofile.Name = "btneditprofile";
+            this.btneditprofile.Size = new System.Drawing.Size(120, 28);
+            this.btneditprofile.TabIndex = 4;
+            this.btneditprofile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btneditprofile_MouseClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -219,6 +220,7 @@
             this.Controls.Add(this.ptbClose);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";

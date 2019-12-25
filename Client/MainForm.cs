@@ -60,8 +60,6 @@ namespace Client
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-
-
             //Task.Run(() => ReceiveFromServer());
             //Task.Run(() => TcpReceiveFromServer());
 

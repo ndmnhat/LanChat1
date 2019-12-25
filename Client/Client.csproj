@@ -380,6 +380,9 @@
     <None Include="Resources\greenbtn.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Resources\chat.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\o.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
