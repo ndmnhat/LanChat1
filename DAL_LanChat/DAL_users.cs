@@ -16,16 +16,11 @@ namespace DAL_LanChat
         {
             conn.Open();
         }
-        ~DAL_users()
-        {
-            conn.Close();    
-        }
         public DataTable GetAllUsers()
         {
             SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM users", conn);
             DataTable table = new DataTable();
             da.Fill(table);
-            conn.Close();
             return table;
         }
         public DataTable GetUsersWith(string Attribute, object value)
@@ -92,7 +87,6 @@ namespace DAL_LanChat
         public DTO_users GetUsers(int userid)
         {
             DTO_users user = new DTO_users();
-            //conn.Open();
             string sql = "SELECT * FROM users WHERE userid = @userid";
             using (SQLiteCommand SqlCmd = new SQLiteCommand(sql,conn))
             {

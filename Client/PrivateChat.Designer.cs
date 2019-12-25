@@ -119,6 +119,7 @@
             this.ptbxGame.Size = new System.Drawing.Size(34, 30);
             this.ptbxGame.TabIndex = 10;
             this.ptbxGame.TabStop = false;
+            this.ptbxGame.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ptbxGame_MouseClick);
             // 
             // ptbxSticker
             // 

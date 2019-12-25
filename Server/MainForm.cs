@@ -10,13 +10,14 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Runtime.InteropServices;
 using System.IO;
 using DTO_LanChat;
 using BUS_LanChat;
 using Packet;
 namespace Server
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         UdpClient server;
         UdpClient sendserver;
@@ -24,23 +25,15 @@ namespace Server
         TcpClient tcpsender;
         BUS_users UsersBUS = new BUS_users();
         BUS_mess MessBUS = new BUS_mess();
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
-            label1.Text = "IP: " + getlocalIP();
+            lblIP.Text = "Server IP: " + getlocalIP();
             CheckForIllegalCrossThreadCalls = false;
+            lblState.Text = "Server state: " + "Offline";
+            UpdateDTG();
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ThreadStart threadstart1 = new ThreadStart(ReceiveAndRespond);
-            Thread thread = new Thread(threadstart1);
-            thread.IsBackground = true;
-            thread.Start();
-            Task.Run(() =>
-            {
-                TcpReceiveAndRespond();
-            });
-        }
+
         public static string getlocalIP()
         {
             string localIP;
@@ -52,12 +45,7 @@ namespace Server
             }
             return localIP;
         }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            server.Close();
-            sendserver.Close();
-        }
+        #region FormLoad
         private void ReceiveAndRespond()
         {
             server = new UdpClient(52054);
@@ -76,13 +64,12 @@ namespace Server
                     byte[] data = server.Receive(ref iPEnd);
                     SocketPacket packet = new SocketPacket();
                     packet = SocketPacket.DeSerializedItem(data);
-                    label2.Text = packet.Message;
                     ProcessPacket(packet);
                 }
             }
             catch (Exception exception)
             {
-                label3.Text = exception.Message;
+                WriteToLog(exception);
                 goto start;
             }
         }
@@ -91,10 +78,17 @@ namespace Server
             listener = new TcpListener(IPAddress.Parse(getlocalIP()), 52056);
             TcpClient client;
             listener.Start();
-            while(true)
+            try
             {
-                client = listener.AcceptTcpClient();
-                ThreadPool.QueueUserWorkItem(ThreadProc, client);
+                while (true)
+                {
+                    client = listener.AcceptTcpClient();
+                    ThreadPool.QueueUserWorkItem(ThreadProc, client);
+                }
+            }
+            catch(Exception e)
+            {
+                WriteToLog(e);
             }
 
         }
@@ -104,19 +98,29 @@ namespace Server
             NetworkStream stream = client.GetStream();
             while(true)
             {
-                byte[] buffer = new byte[316];
-                while(stream.Read(buffer, 0, buffer.Length)==0)
-                { }
-                SocketPacket lengthpacket = SocketPacket.DeSerializedItem(buffer);
-                byte[] responsedata = new byte[lengthpacket.PacketLength];
-                SocketPacket responsetoclient = new SocketPacket(PacketType.NONE, getlocalIP(), lengthpacket.SenderIP, 52056, 52055, "OK");
-                stream.Write(Packet.SocketPacket.SerializedItem(responsetoclient), 0, Packet.SocketPacket.SerializedItem(responsetoclient).Length);
-                while (stream.Read(responsedata, 0, responsedata.Length) == 0)
-                { }
-                SocketPacket returnpacket = SocketPacket.DeSerializedItem(responsedata);
-                TcpProcessPacket(returnpacket,client);
+                start:
+                try
+                {
+                    byte[] buffer = new byte[316];
+                    while (stream.Read(buffer, 0, buffer.Length) == 0)
+                    { }
+                    SocketPacket lengthpacket = SocketPacket.DeSerializedItem(buffer);
+                    byte[] responsedata = new byte[lengthpacket.PacketLength];
+                    SocketPacket responsetoclient = new SocketPacket(PacketType.NONE, getlocalIP(), lengthpacket.SenderIP, 52056, 52055, "OK");
+                    stream.Write(Packet.SocketPacket.SerializedItem(responsetoclient), 0, Packet.SocketPacket.SerializedItem(responsetoclient).Length);
+                    while (stream.Read(responsedata, 0, responsedata.Length) == 0)
+                    { }
+                    SocketPacket returnpacket = SocketPacket.DeSerializedItem(responsedata);
+                    TcpProcessPacket(returnpacket, client);
+                }
+                catch(Exception e)
+                {
+                    WriteToLog(e);
+                    goto start;
+                }
             }
         }
+        #endregion
         private void TcpProcessPacket(SocketPacket packet,TcpClient client)
         {
             switch(packet.packetType)
@@ -178,6 +182,10 @@ namespace Server
                 case PacketType.STICKER:
                     STICKER_packet_process(packet);
                     break;
+
+                case PacketType.REQUSERPROFILE:
+                    REQUSERPROFILE_packet_process(packet);
+                    break;
                 //case PacketType.REQPROFILE:
                 //    REQPROFILE_packet_process(packet);
                 //    break;
@@ -185,9 +193,21 @@ namespace Server
                 //case PacketType.IMG:
                 //    IMG_packet_process(packet);
                 //    break;
-
+                case PacketType.CLOSE:
+                    CLOSE_packet_process(packet);
+                    break;
                 default:break;
             }
+        }
+        #region PACKET PROCESS
+        private void REQUSERPROFILE_packet_process(SocketPacket packet)
+        {
+            DTO_users user = UsersBUS.GetUsers(UsersBUS.GetUsersID(packet.SenderName));
+            user.userpassword = "";
+            user.useravatar = null;
+            SocketPacket response = new SocketPacket(PacketType.REQUSERPROFILE, getlocalIP(), packet.SenderIP, 52054, 52052, packet.SenderName, user);
+            byte[] data = SocketPacket.SerializedItem(response);
+            sendserver.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), 52052));
         }
 
         private void STICKER_packet_process(SocketPacket packet)
@@ -220,9 +240,10 @@ namespace Server
             SocketPacket response = new SocketPacket(PacketType.UPDATEPROFILE, getlocalIP(), packet.SenderIP, 52054, 52052, packet.SenderName, userinfo);
             byte[] data = SocketPacket.SerializedItem(response);
             server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), 52053));
+            UpdateDTG();
         }
 
-        public void REQCON_packet_process(SocketPacket packet)
+        private void REQCON_packet_process(SocketPacket packet)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             if (UsersBUS.PasswordCheck(packet.SenderName, packet.Message))
@@ -235,8 +256,9 @@ namespace Server
             response.packetType = PacketType.REQCON;
             byte[] data = SocketPacket.SerializedItem(response);
             server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
+            UpdateDTG();
         }
-        public void REQFRIEND_packet_process(SocketPacket packet)
+        private void REQFRIEND_packet_process(SocketPacket packet)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             string onlinefriend = "";
@@ -259,7 +281,7 @@ namespace Server
                 sendserver.Send(data2, data2.Length, new IPEndPoint(IPAddress.Parse(rip), 52053));
             }
         }
-        public void MESSAGETABLE_packet_process(SocketPacket packet,TcpClient client)
+        private void MESSAGETABLE_packet_process(SocketPacket packet,TcpClient client)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52056, packet.SenderPort);
             int user1id = UsersBUS.GetUsersID(packet.SenderName);
@@ -273,7 +295,7 @@ namespace Server
             //sendserver.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
             TcpSendPacket(response, client);
         }
-        public void MESSAGE_packet_process(SocketPacket packet)
+        private void MESSAGE_packet_process(SocketPacket packet)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             int user1id = UsersBUS.GetUsersID(packet.SenderName);
@@ -290,7 +312,7 @@ namespace Server
             sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
             sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user2ip), 52053));
         }
-        public void REG_packet_process(SocketPacket packet)
+        private void REG_packet_process(SocketPacket packet)
         {
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52054, packet.SenderPort);
             if (!UsersBUS.isUsersHave("username", packet.SenderName))
@@ -303,8 +325,9 @@ namespace Server
             response.packetType = PacketType.REG;
             byte[] data = SocketPacket.SerializedItem(response);
             server.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(packet.SenderIP), packet.SenderPort));
+            UpdateDTG();
         }
-        public void UPDATEAVATAR_packet_process(SocketPacket packet, TcpClient client)
+        private void UPDATEAVATAR_packet_process(SocketPacket packet, TcpClient client)
         {
             UsersBUS.UpdateUsers(UsersBUS.GetUsersID("username", packet.SenderName)[0], "useravatar", packet.image);
             SocketPacket response = new SocketPacket(PacketType.NONE, getlocalIP(), packet.SenderIP, 52051, 52053);
@@ -321,14 +344,15 @@ namespace Server
             }
             catch (Exception exception)
             {
-                label3.Text = exception.Message;
+                WriteToLog(exception);
             }
         }
-        public void REQPROFILE_packet_process(SocketPacket packet, TcpClient client)
+        private void REQPROFILE_packet_process(SocketPacket packet, TcpClient client)
         {
             DTO_users user = UsersBUS.GetUsers(UsersBUS.GetUsersID(packet.SenderName));
             SocketPacket response = new SocketPacket(PacketType.REQPROFILE, getlocalIP(), packet.SenderIP, 52054, 52053,packet.SenderName,user);
             TcpSendPacket(response, client);
+            UpdateDTG();
         }
         public void IMG_packet_process(SocketPacket packet, TcpClient client)
         {
@@ -353,10 +377,15 @@ namespace Server
             }
             catch (Exception exception)
             {
-                label3.Text = exception.Message;
+                WriteToLog(exception);
             }
             //sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user1ip), 52052));
             //sendserver.Send(data3, data3.Length, new IPEndPoint(IPAddress.Parse(user2ip), 52053));
+        }
+        private void CLOSE_packet_process(SocketPacket packet)
+        {
+            UsersBUS.UpdateUsers(UsersBUS.GetUsersID(packet.SenderName), "userstatus", false);
+            UpdateDTG();
         }
         private void TcpSendPacket(SocketPacket packet, TcpClient client)
         {
@@ -370,5 +399,97 @@ namespace Server
             if (Packet.SocketPacket.DeSerializedItem(buffer).Message == "OK")
                 stream.Write(data, 0, data.Length);
         }
+        #endregion
+        private void WriteToLog(Exception e)
+        {
+            try
+            { 
+                File.AppendAllText("Log.txt", string.Format("[{0}] : {1}\n", DateTime.Now.ToString(), e.Message));
+                label3.Visible = true;
+            }
+            catch
+            { }
+            //using (var stream = File.AppendText("Log.txt",))
+            //{
+            //    stream.WriteLine(string.Format("[{0}] : {1}\n", DateTime.Now.ToString(), e.Message)); 
+            //    stream.Flush();
+            //    stream.Close();
+            //}
+        }
+        #region GUI
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        private void UpdateDTG()
+        {
+            DataTable usertable = UsersBUS.GetAllUsers();
+            DataView view = new DataView(usertable);
+            DataTable usertable2 = view.ToTable(false, "userid", "username", "userstatus");
+            dtgUser.DataSource = usertable2;
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (server != null)
+            {
+                if (server.Client == null)
+                    goto Run;
+                MessageBox.Show("Server is already opened");
+                return;
+            }
+            Run:
+            ThreadStart threadstart1 = new ThreadStart(ReceiveAndRespond);
+            thread = new Thread(threadstart1);
+            ThreadStart threadstart2 = new ThreadStart(TcpReceiveAndRespond);
+            thread2 = new Thread(threadstart2);
+            thread.IsBackground = true;
+            thread.Start();
+            thread2.Start();
+            lblState.Text = "Server state: " + "Online";
+        }
+        Thread thread;
+        Thread thread2;
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (server == null)
+            {
+                MessageBox.Show("Server is not opened yet.");
+                return;
+            }
+            server.Close();
+            sendserver.Close();
+            listener.Stop();
+            lblState.Text = "Server state: " + "Offline";
+            thread.Abort();
+            thread2.Abort();
+        }
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void ptbClose_MouseEnter(object sender, EventArgs e)
+        {
+            ptbClose.BackColor = Color.FromArgb(16, 16, 74);
+        }
+
+        private void ptbClose_MouseLeave(object sender, EventArgs e)
+        {
+            ptbClose.BackColor = Color.Transparent;
+        }
+        #endregion
+
     }
 }

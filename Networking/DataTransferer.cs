@@ -30,7 +30,7 @@ namespace Networking
         }
         public static SocketPacket SendAndReceive(string remoteip, int remoteport, SocketPacket packet)
         {
-            //client.Client.ReceiveTimeout = 5000;
+            client.Client.ReceiveTimeout = 5000;
             try
             {
                 byte[] data = SocketPacket.SerializedItem(packet);

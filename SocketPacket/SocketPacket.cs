@@ -216,6 +216,18 @@ namespace Packet
                     info.AddValue("Msg", Message, typeof(string));
                     break;
 
+                case PacketType.REQUSERPROFILE:
+                    info.AddValue("SenderName", SenderName, typeof(string));
+                    info.AddValue("userinfo", userinfo, typeof(DTO_users));
+                    break;
+
+                case PacketType.CARO:
+                    info.AddValue("Msg", Message, typeof(string));
+                    break;
+
+                case PacketType.CLOSE:
+                    info.AddValue("SenderName", SenderName, typeof(string));
+                    break;
                 default: break;
             }
 
@@ -290,6 +302,19 @@ namespace Packet
                 case PacketType.NONE:
                     Message = (string)info.GetValue("Msg", typeof(string));
                     break;
+
+                case PacketType.REQUSERPROFILE:
+                    SenderName = (string)info.GetValue("SenderName", typeof(string));
+                    userinfo = (DTO_users)info.GetValue("userinfo", typeof(DTO_users));
+                    break;
+
+                case PacketType.CARO:
+                    Message = (string)info.GetValue("Msg", typeof(string));
+                    break;
+
+                case PacketType.CLOSE:
+                    SenderName = (string)info.GetValue("SenderName", typeof(string));
+                    break;
                 default: break;
             }
         }
@@ -330,8 +355,11 @@ namespace Packet
         UPDATEPROFILE,
         UPDATEAVATAR,
         REQPROFILE,
+        REQUSERPROFILE,
         REQAVATAR,
         REG,
+        CARO,
+        CLOSE,
         NONE
     }
 }

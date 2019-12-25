@@ -15,40 +15,40 @@ namespace DAL_LanChat
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
         protected SQLiteConnection conn = new SQLiteConnection(LoadConnectionString());
-        //    private static bool CheckDatabaseExists(SqlConnection tmpConn, string databaseName)
-        //    {
-        //        string sqlCreateDBQuery;
-        //        bool result = false;
+        //private static bool CheckDatabaseExists(SqlConnection tmpConn, string databaseName)
+        //{
+        //    string sqlCreateDBQuery;
+        //    bool result = false;
 
-        //        try
+        //    try
+        //    {
+        //        tmpConn = new SqlConnection("server=(local)\\SQLEXPRESS;Trusted_Connection=yes");
+        //        sqlCreateDBQuery = string.Format("SELECT database_id FROM sys.databases WHERE Name = '{0}'", databaseName);
+        //        using (tmpConn)
         //        {
-        //            tmpConn = new SqlConnection("server=(local)\\SQLEXPRESS;Trusted_Connection=yes");
-        //            sqlCreateDBQuery = string.Format("SELECT database_id FROM sys.databases WHERE Name = '{0}'", databaseName);
-        //            using (tmpConn)
+        //            using (SQLiteCommand sqlCmd = new SQLiteCommand(sqlCreateDBQuery, tmpConn))
         //            {
-        //                using (SQLiteCommand sqlCmd = new SQLiteCommand(sqlCreateDBQuery, tmpConn))
+        //                tmpConn.Open();
+        //                object resultObj = sqlCmd.ExecuteScalar();
+        //                int databaseID = 0;
+        //                if (resultObj != null)
         //                {
-        //                    tmpConn.Open();
-        //                    object resultObj = sqlCmd.ExecuteScalar();
-        //                    int databaseID = 0;
-        //                    if (resultObj != null)
-        //                    {
-        //                        int.TryParse(resultObj.ToString(), out databaseID);
-        //                    }
-        //                    tmpConn.Close();
-        //                    result = (databaseID > 0);
+        //                    int.TryParse(resultObj.ToString(), out databaseID);
         //                }
+        //                tmpConn.Close();
+        //                result = (databaseID > 0);
         //            }
         //        }
-        //        catch (Exception)
-        //        {
-        //            result = false;
-        //        }
-        //        return result;
         //    }
-        //    public dbConnection()
+        //    catch (Exception)
         //    {
-        //        SqlConnection tmpConn = new SqlConnection();
+        //        result = false;
         //    }
+        //    return result;
+        //}
+        //public dbConnection()
+        //{
+        //    SqlConnection tmpConn = new SqlConnection();
+        //}
     }
 }

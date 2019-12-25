@@ -19,6 +19,7 @@ namespace Client
         string sendername;
         string receivername;
         string myip;
+        string receiverip;
         string serverip;
         int myid;
         StickerForm stickerform;
@@ -58,7 +59,10 @@ namespace Client
                 SocketPacket messagetablepacket = DataTransferer.TcpSendAndReceive(serverip, 52056, new SocketPacket(PacketType.MESSAGETABLE, myip, serverip, 52052, 52054, sendername, receivername, "", 1));
                 myid = Convert.ToInt32(messagetablepacket.Message);
                 LoadMessage(messagetablepacket.MessageTable);
+                SocketPacket friendinfo = DataTransferer.SendAndReceive(serverip, 52054, new SocketPacket(PacketType.REQUSERPROFILE, myip, serverip, 52052, 52054, receivername,sendername,"",1));
+                receiverip = friendinfo.userinfo.userip;
             });
+            
         }
 
         private void btnSend_MouseClick(object sender, MouseEventArgs e)
@@ -260,13 +264,30 @@ namespace Client
 
         private void ptbxSticker_MouseClick(object sender, MouseEventArgs e)
         {
-            stickerform.ShowDialog();
-            if(stickerform.stickername!="")
+            if (isOpenStickerForm == true)
             {
-                SocketPacket returnpacket = DataTransferer.SendAndReceive(serverip, 52054, new SocketPacket(PacketType.STICKER, myip, serverip, 52052, 52054, sendername, receivername, stickerform.stickername, 2));
-                UpdateMessage(returnpacket.MessageRow);
+                stickerform.Hide();
+                isOpenStickerForm = false;
+
+            }
+            else
+            {
+                Task.Run(() =>
+                {
+                    isOpenStickerForm = true;
+                    stickerform.ShowDialog();
+                    if (stickerform.stickername != "")
+                    {
+                        SocketPacket returnpacket = DataTransferer.SendAndReceive(serverip, 52054, new SocketPacket(PacketType.STICKER, myip, serverip, 52052, 52054, sendername, receivername, stickerform.stickername, 2));
+                        UpdateMessage(returnpacket.MessageRow);
+                    }
+                });
             }
         }
 
+        private void ptbxGame_MouseClick(object sender, MouseEventArgs e)
+        {
+            Caro caro = new Caro(myip, receiverip);
+        }
     }
 }

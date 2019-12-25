@@ -2,7 +2,6 @@ C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\Server.exe.config
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\Server.exe
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\Server.pdb
 C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.csprojAssemblyReference.cache
-C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.Form1.resources
 C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.Properties.Resources.resources
 C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.csproj.GenerateResource.cache
 C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.exe
@@ -20,3 +19,4 @@ C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\Database.db
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\System.Data.SQLite.dll
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\System.Data.SQLite.xml
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.MainForm.resources

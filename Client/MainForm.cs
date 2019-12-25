@@ -78,6 +78,7 @@ namespace Client
 
         private void ptbClose_MouseClick(object sender, MouseEventArgs e)
         {
+            DataTransferer.Send(serverip, 52054, new SocketPacket(PacketType.CLOSE, getlocalIP(), name));
             this.Close();
         }
 
@@ -152,6 +153,7 @@ namespace Client
         private void Friendtiles_MouseClick(object sender, MouseEventArgs e, MainForm form, string receivername)
         {
             PrivateChat chat = new PrivateChat(form, receivername);
+            
             chat.Show();
         }
 

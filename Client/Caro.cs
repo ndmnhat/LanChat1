@@ -19,7 +19,8 @@ namespace Client
         int index = 0;
         int pointx = 0;
         int pointo = 0;
-        
+        public string myip;
+        public string receiverip;
         List<List<Button>> lBanCo;
         public Caro()
         {
@@ -30,7 +31,20 @@ namespace Client
             pgsCooldown.Step = 100;
             pgsCooldown.Maximum = 10000;
             pgsCooldown.Value = 0;
-            
+
+        }
+        public Caro(string ip1, string ip2)
+        {
+            InitializeComponent();
+            DrawChessBoard();
+            ptcbxPlayerChess.BackgroundImage = Image.FromFile(Application.StartupPath + "\\Resources\\x.png");
+
+            pgsCooldown.Step = 100;
+            pgsCooldown.Maximum = 10000;
+            pgsCooldown.Value = 0;
+
+            myip = ip1;
+            receiverip = ip2;
         }
         void DrawChessBoard()
         {
