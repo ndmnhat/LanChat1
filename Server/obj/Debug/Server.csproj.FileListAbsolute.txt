@@ -20,3 +20,5 @@ C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\System.Data.SQLite.dll
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\System.Data.SQLite.xml
 C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\System.Data.SQLite.dll.config
 C:\Users\Admin\source\repos\LanChat\Server\obj\Debug\Server.MainForm.resources
+C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\Resources\close_white_108x108.png
+C:\Users\Admin\source\repos\LanChat\Server\bin\Debug\Resources\minimizewhite.png

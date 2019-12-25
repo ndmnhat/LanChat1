@@ -14,8 +14,6 @@ C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\close.png
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\SocketPacket.dll
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\SocketPacket.pdb
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.csproj.CopyComplete
-C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Networking.dll
-C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Networking.pdb
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.Tiles.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.PrivateChat.resources
 C:\Users\Admin\source\repos\LanChat\Client\obj\Debug\Client.CustomControl.CustomRichTextBox.resources
@@ -72,3 +70,5 @@ C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\tiles3.png
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\editptb.png
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\editptb2.png
 C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\greenbtn.png
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\sampleavatar.jpg
+C:\Users\Admin\source\repos\LanChat\Client\bin\Debug\Resources\btnsend.jpg

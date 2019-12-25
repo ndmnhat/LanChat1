@@ -30,21 +30,12 @@ namespace Server
             InitializeComponent();
             lblIP.Text = "Server IP: " + getlocalIP();
             CheckForIllegalCrossThreadCalls = false;
+            this.StartPosition = FormStartPosition.CenterScreen;
             lblState.Text = "Server state: " + "Offline";
             UpdateDTG();
         }
 
-        public static string getlocalIP()
-        {
-            string localIP;
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-            {
-                socket.Connect("8.8.8.8", 65530);
-                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                localIP = endPoint.Address.ToString();
-            }
-            return localIP;
-        }
+
         #region FormLoad
         private void ReceiveAndRespond()
         {
@@ -96,10 +87,9 @@ namespace Server
         {
             var client = (TcpClient)obj;
             NetworkStream stream = client.GetStream();
-            while(true)
+            try
             {
-                start:
-                try
+                while (true)
                 {
                     byte[] buffer = new byte[316];
                     while (stream.Read(buffer, 0, buffer.Length) == 0)
@@ -113,11 +103,13 @@ namespace Server
                     SocketPacket returnpacket = SocketPacket.DeSerializedItem(responsedata);
                     TcpProcessPacket(returnpacket, client);
                 }
-                catch(Exception e)
-                {
-                    WriteToLog(e);
-                    goto start;
-                }
+            }
+            catch (Exception e)
+            {
+
+                WriteToLog(e);
+                client.Close();
+                Thread.CurrentThread.Abort();
             }
         }
         #endregion
@@ -351,7 +343,17 @@ namespace Server
         {
             DTO_users user = UsersBUS.GetUsers(UsersBUS.GetUsersID(packet.SenderName));
             SocketPacket response = new SocketPacket(PacketType.REQPROFILE, getlocalIP(), packet.SenderIP, 52054, 52053,packet.SenderName,user);
-            TcpSendPacket(response, client);
+            try
+            {
+                tcpsender = new TcpClient();
+                tcpsender.Connect(IPAddress.Parse(packet.SenderIP), 52057);
+                TcpSendPacket(response, tcpsender);
+                tcpsender.Close();
+            }
+            catch (Exception exception)
+            {
+                WriteToLog(exception);
+            }
             UpdateDTG();
         }
         public void IMG_packet_process(SocketPacket packet, TcpClient client)
@@ -384,8 +386,11 @@ namespace Server
         }
         private void CLOSE_packet_process(SocketPacket packet)
         {
-            UsersBUS.UpdateUsers(UsersBUS.GetUsersID(packet.SenderName), "userstatus", false);
-            UpdateDTG();
+            Task.Run(() =>
+            {
+                UsersBUS.UpdateUsers(UsersBUS.GetUsersID(packet.SenderName), "userstatus", false);
+                UpdateDTG();
+            });
         }
         private void TcpSendPacket(SocketPacket packet, TcpClient client)
         {
@@ -400,22 +405,7 @@ namespace Server
                 stream.Write(data, 0, data.Length);
         }
         #endregion
-        private void WriteToLog(Exception e)
-        {
-            try
-            { 
-                File.AppendAllText("Log.txt", string.Format("[{0}] : {1}\n", DateTime.Now.ToString(), e.Message));
-                label3.Visible = true;
-            }
-            catch
-            { }
-            //using (var stream = File.AppendText("Log.txt",))
-            //{
-            //    stream.WriteLine(string.Format("[{0}] : {1}\n", DateTime.Now.ToString(), e.Message)); 
-            //    stream.Flush();
-            //    stream.Close();
-            //}
-        }
+
         #region GUI
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -456,6 +446,11 @@ namespace Server
                 MessageBox.Show("Server is not opened yet.");
                 return;
             }
+            if(server.Client == null)
+            {
+                MessageBox.Show("Server is not opened yet.");
+                return;
+            }
             server.Close();
             sendserver.Close();
             listener.Stop();
@@ -488,6 +483,63 @@ namespace Server
         private void ptbClose_MouseLeave(object sender, EventArgs e)
         {
             ptbClose.BackColor = Color.Transparent;
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+            //this.Visible = false;
+            //notifyIcon1.Visible = true;
+        }
+
+        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Visible = true;
+            this.WindowState = FormWindowState.Normal;
+            //notifyIcon1.Visible = false;
+            this.Activate();
+        }
+
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBox1.BackColor = Color.FromArgb(16, 16, 74);
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox1.BackColor = Color.Transparent;
+        }
+
+
+        #endregion
+
+        #region Utility
+        private void WriteToLog(Exception e)
+        {
+            try
+            {
+                File.AppendAllText("Log.txt", string.Format("[{0}] : {1}\n", DateTime.Now.ToString(), e.ToString()));
+                label3.Visible = true;
+            }
+            catch
+            { }
+            //using (var stream = File.AppendText("Log.txt",))
+            //{
+            //    stream.WriteLine(string.Format("[{0}] : {1}\n", DateTime.Now.ToString(), e.Message)); 
+            //    stream.Flush();
+            //    stream.Close();
+            //}
+        }
+        public static string getlocalIP()
+        {
+            string localIP;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            return localIP;
         }
         #endregion
 

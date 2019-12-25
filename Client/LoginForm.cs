@@ -1,5 +1,4 @@
-﻿using Networking;
-using Packet;
+﻿using Packet;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -57,21 +56,46 @@ namespace Client
             //this.txbSignupPassword2.textbox.Location = new Point(22, 3);
             this.Select(false,false);
         }
-        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        public static string getlocalIP()
         {
-            ptbClose.BackColor = Color.FromArgb(118, 22, 22);
+            string localIP;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            return localIP;
+        }
+        
+
+
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
+
+        private void LoginForm_Paint(object sender, PaintEventArgs e)
+        {
+            LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, ColorTranslator.FromHtml("#ff7e8b"), ColorTranslator.FromHtml("#223367"), LinearGradientMode.Horizontal);
+            Graphics g = e.Graphics;
+            g.FillRectangle(brush, this.ClientRectangle);
         }
 
-        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        #region button click event
+        private void btnSignUp_MouseClick(object sender, MouseEventArgs e)
         {
-            ptbClose.BackColor = Color.Transparent;
+            if (txbSignUpPassword.textbox.Text != txbSignUpPassword2.textbox.Text)
+            {
+                MessageBox.Show("Wrong confirm password!");
+                return;
+            }
+            SocketPacket packet = new SocketPacket(PacketType.REG, localIP, serverip, 52052, 52054, txbSignUpUsername.textbox.Text, "", txbSignUpPassword.textbox.Text, 0);
+            SocketPacket returnpacket = DataTransferer.SendAndReceive(serverip, 52054, packet);
+            if (returnpacket.Message == "OK")
+                MessageBox.Show("You have successfully registered!");
+            else
+                MessageBox.Show(returnpacket.Message);
         }
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.Close();
-        }
-
         private void btnSignIn_MouseClick(object sender, MouseEventArgs e)
         {
             //this.Visible = false;
@@ -90,18 +114,6 @@ namespace Client
                 MessageBox.Show(returnpacket.Message);
             }
         }
-        public static string getlocalIP()
-        {
-            string localIP;
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-            {
-                socket.Connect("8.8.8.8", 65530);
-                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
-                localIP = endPoint.Address.ToString();
-            }
-            return localIP;
-        }
-
         private void ptbSetting_MouseClick(object sender, MouseEventArgs e)
         {
             setting.ShowDialog();
@@ -109,41 +121,16 @@ namespace Client
             Client.Properties.Settings.Default.Save();
             serverip = Client.Properties.Settings.Default.ServerIP;
         }
-
-        private void ptbSetting_MouseEnter(object sender, EventArgs e)
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            ptbSetting.BackColor = Color.FromArgb(118, 22, 22);
+            this.Close();
         }
-
-        private void ptbSetting_MouseLeave(object sender, EventArgs e)
+        private void ptbMinimize_MouseClick(object sender, MouseEventArgs e)
         {
-            ptbSetting.BackColor = Color.Transparent;
+            WindowState = FormWindowState.Minimized;
         }
+        #endregion
 
-        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
-
-        private void LoginForm_Paint(object sender, PaintEventArgs e)
-        {
-            LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, ColorTranslator.FromHtml("#ff7e8b"), ColorTranslator.FromHtml("#223367"), LinearGradientMode.Horizontal);
-            Graphics g = e.Graphics;
-            g.FillRectangle(brush, this.ClientRectangle);
-        }
-
-        private void btnSignUp_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (txbSignUpPassword.textbox.Text != txbSignUpPassword2.textbox.Text)
-            {
-                MessageBox.Show("Wrong confirm password!");
-                return;
-            }
-            SocketPacket packet = new SocketPacket(PacketType.REG, localIP, serverip, 52052, 52054, txbSignUpUsername.textbox.Text, "", txbSignUpPassword.textbox.Text, 0);
-            SocketPacket returnpacket = DataTransferer.SendAndReceive(serverip, 52054, packet);
-            if (returnpacket.Message == "OK")
-                MessageBox.Show("You have successfully registered!");
-            else
-                MessageBox.Show(returnpacket.Message);
-        }
         #region textbox
         private void txbUsername_Enter(object sender, EventArgs e)
         {
@@ -248,5 +235,38 @@ namespace Client
             }
         }
         #endregion
+
+        #region button effect
+        private void ptbMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            ptbMinimize.BackColor = Color.LightSteelBlue;
+        }
+
+        private void ptbMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            ptbMinimize.BackColor = Color.Transparent;
+        }
+        private void ptbSetting_MouseEnter(object sender, EventArgs e)
+        {
+            ptbSetting.BackColor = Color.LightSteelBlue;
+        }
+
+        private void ptbSetting_MouseLeave(object sender, EventArgs e)
+        {
+            ptbSetting.BackColor = Color.Transparent;
+        }
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+            ptbClose.BackColor = Color.LightSteelBlue;
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            ptbClose.BackColor = Color.Transparent;
+        }
+
+        #endregion
+
+
     }
 }

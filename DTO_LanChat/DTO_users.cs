@@ -5,16 +5,16 @@ namespace DTO_LanChat
     [Serializable]
     public class DTO_users
     {
-        public int userid { get; set; }
-        public string username { get; set; }
-        public bool userstatus { get; set; }
-        public string userip { get; set; }
-        public string userpassword { get; set; }
-        public Image useravatar { get; set; }
-        public string userfullname { get; set; }
-        public string usergender { get; set; }
-        public DateTime userbirthday { get; set; }
-        public string userphonenumber { get; set; }
+        public int userid = 0;
+        public string username = "";
+        public bool userstatus = false;
+        public string userip = "";
+        public string userpassword = "";
+        public Image useravatar = new Bitmap(1, 1);
+        public string userfullname = "";
+        public string usergender = "";
+        public DateTime userbirthday = DateTime.Now;
+        public string userphonenumber = "";
         public DTO_users()
         {
             userid = 0;

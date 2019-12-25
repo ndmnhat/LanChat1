@@ -1,0 +1,13 @@
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\BUS_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\BUS_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\DAL_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\DTO_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\System.Data.SQLite.dll
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\DAL_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\DTO_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\System.Data.SQLite.xml
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\bin\Release\System.Data.SQLite.dll.config
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Release\BUS_LanChat.csprojAssemblyReference.cache
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Release\BUS_LanChat.csproj.CopyComplete
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Release\BUS_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\BUS_LanChat\obj\Release\BUS_LanChat.pdb

@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using System.Net.Sockets;
 using System.Net;
 using Packet;
-using Networking;
 using Client.CustomControl;
 using DTO_LanChat;
 using System.Threading;
@@ -39,12 +38,20 @@ namespace Client
             InitializeComponent();
             serverip = svip;
             name = username;
+            label1.Text = name;
+
+            Thread thread = new Thread(new ThreadStart(ReceiveFromServer));
+            Thread thread2 = new Thread(new ThreadStart(TcpReceiveFromServer));
+            thread.IsBackground = true;
+            thread2.IsBackground = true;
+            thread.Start();
+            thread2.Start();
 
             LoadCustom();
         }
         private void LoadCustom()
         {
-            ptbAvatar.BackgroundImage = CropImage(Image.FromFile("a.jpg"));
+            ptbAvatar.BackgroundImage = CropImage(Image.FromFile(@"Resources\sampleavatar.jpg"));
             btneditprofile.font = new Font("Teko", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             btneditprofile.textcolor = Color.Black;
             btneditprofile.ButtonText = "Edit profile";
@@ -53,17 +60,18 @@ namespace Client
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
-            Task.Run(() => ReceiveFromServer());
-            Task.Run(() => TcpReceiveFromServer());
-            label1.Text = name;
+
+
+            //Task.Run(() => ReceiveFromServer());
+            //Task.Run(() => TcpReceiveFromServer());
+
             SocketPacket reqfriendpacket = new SocketPacket(PacketType.REQFRIEND, getlocalIP(), serverip, 52052, 52054);
             while (true)
                 if (isConnected)
                 { Task.Delay(1000); break; }
             DataTransferer.Send(serverip, 52054, reqfriendpacket);
-            SocketPacket returnpacket = DataTransferer.TcpSendAndReceive(serverip,52056, new SocketPacket(PacketType.REQPROFILE, getlocalIP(), name));
-            UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
+            DataTransferer.TcpSend(serverip, 52056, new SocketPacket(PacketType.REQPROFILE, getlocalIP(), name));
+
         }
 
         private void ptbClose_MouseEnter(object sender, EventArgs e)
@@ -133,8 +141,8 @@ namespace Client
             for (int i = 0; i < FriendCount; ++i)
             {
                 string[] subsubst = subst[i + 1].Split(':');
-                //if (subsubst[1] == name)
-                //continue;
+                if (subsubst[1] == name)
+                    continue;
                 Tiles friendtiles = new Tiles();
                 friendtiles.TilesName.Text = subsubst[0];
                 friendtiles.TilesIP = subsubst[1];
@@ -181,9 +189,11 @@ namespace Client
                         break;
 
                     case PacketType.UPDATEPROFILE:
-                    case PacketType.REQPROFILE:
                         UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
                         break;
+                    //case PacketType.REQPROFILE:
+                    //    UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
+                    //    break;
                 }
             }
         }
@@ -214,6 +224,9 @@ namespace Client
                     case PacketType.UPDATEAVATAR:
                         this.ptbAvatar.BackgroundImage = CropImage(returnpacket.image);
                         break;
+                    case PacketType.REQPROFILE:
+                        UpdateProfile(returnpacket.userinfo.userfullname, returnpacket.userinfo.usergender, returnpacket.userinfo.userbirthday, returnpacket.userinfo.userphonenumber, returnpacket.userinfo.useravatar);
+                        break;
                 }
                 client.Client.Disconnect(true);
                 client.Close();
@@ -221,7 +234,7 @@ namespace Client
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SocketPacket disconnect = new SocketPacket(PacketType.DISCON, getlocalIP(), serverip, 52052, 52054);
+            SocketPacket disconnect = new SocketPacket(PacketType.CLOSE, getlocalIP(), name);
             DataTransferer.Send(serverip, 52052, disconnect);
         }
 
@@ -284,7 +297,10 @@ namespace Client
         {
             string name = lblFullName.Text.Split(new string[1] { ": " },StringSplitOptions.None)[1];
             string gender = lblGender.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1];
-            DateTime birthday = Convert.ToDateTime(lblBirthday.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1]);
+            DateTime birthday;
+            bool res = DateTime.TryParse(lblBirthday.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1],out birthday);
+            if (res == false)
+                birthday = DateTime.Now;
             string phone = lblPhone.Text.Split(new string[1] { ": " }, StringSplitOptions.None)[1];
             EditProfileForm editform = new EditProfileForm(name,gender,birthday,phone);
             if (editform.ShowDialog() == DialogResult.OK)

@@ -14,20 +14,20 @@ namespace Packet
     [Serializable]
     public class SocketPacket : ISerializable
     {
-        public PacketType packetType { get; set; }
-        public int PacketLength { get; set; }
-        public string SenderIP { get; set; }
-        public int SenderPort { get; set; }
-        public string ReceiverIP { get; set; }
-        public int ReceiverPort { get; set; }
-        public string Message { get; set; }
-        public Image image { get; set; }
-        public string SenderName { get; set; }
-        public string ReceiverName { get; set; }
-        public int MessageType { get; set; }
-        public DataTable MessageTable { get; set; }
-        public DataTable MessageRow { get; set; }
-        public DTO_users userinfo { get; set; }
+        public PacketType packetType = PacketType.NONE;
+        public int PacketLength = 0;
+        public string SenderIP = "";
+        public int SenderPort = 0;
+        public string ReceiverIP = "";
+        public int ReceiverPort = 0;
+        public string Message = "";
+        public Image image = new Bitmap(1,1);
+        public string SenderName = "";
+        public string ReceiverName = "";
+        public int MessageType = 0;
+        public DataTable MessageTable = new DataTable();
+        public DataTable MessageRow = new DataTable();
+        public DTO_users userinfo = new DTO_users();
         
         public SocketPacket()
         {

@@ -1,0 +1,4 @@
+C:\Users\Admin\source\repos\LanChat\DTO_LanChat\bin\Release\DTO_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\DTO_LanChat\bin\Release\DTO_LanChat.pdb
+C:\Users\Admin\source\repos\LanChat\DTO_LanChat\obj\Release\DTO_LanChat.dll
+C:\Users\Admin\source\repos\LanChat\DTO_LanChat\obj\Release\DTO_LanChat.pdb

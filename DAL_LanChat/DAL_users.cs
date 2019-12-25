@@ -67,7 +67,7 @@ namespace DAL_LanChat
                 sqlCmd.Parameters.AddWithValue("@useravatar", imageToByteArray(user.useravatar));
                 sqlCmd.Parameters.AddWithValue("@userfullname", user.userfullname);
                 sqlCmd.Parameters.AddWithValue("@usergender", user.usergender);
-                sqlCmd.Parameters.AddWithValue("@userbirthday", user.userbirthday.ToString());
+                sqlCmd.Parameters.AddWithValue("@userbirthday", user.userbirthday.ToShortDateString());
                 sqlCmd.Parameters.AddWithValue("@userphonenumber", user.userphonenumber);
                 sqlCmd.ExecuteNonQuery();
             }
@@ -103,7 +103,7 @@ namespace DAL_LanChat
                         user.userip = Convert.ToString(table.Rows[0].Field<object>("userip"));
                         user.userfullname = Convert.ToString(table.Rows[0].Field<object>("userfullname"));
                         user.usergender = Convert.ToString(table.Rows[0].Field<object>("usergender"));
-                        user.userbirthday = Convert.ToDateTime(table.Rows[0].Field<object>("userbirthday"));
+                        user.userbirthday = DateTime.ParseExact((table.Rows[0].Field<string>("userbirthday")),"M/d/yyyy",null);
                         user.userphonenumber = Convert.ToString(table.Rows[0].Field<object>("userphonenumber"));
                         user.useravatar = byteArrayToImage((byte[])table.Rows[0].Field<object>("useravatar"));
                     }

@@ -84,6 +84,7 @@
     <Compile Include="CustomControl\Tiles.Designer.cs">
       <DependentUpon>Tiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataTransferer.cs" />
     <Compile Include="EditAvatarForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,10 +212,6 @@
       <Project>{34cccf19-9639-4505-a061-f199ac48c92e}</Project>
       <Name>DTO_LanChat</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Networking\Networking.csproj">
-      <Project>{9dfd53cc-268e-4227-9ee9-d2755ab2783b}</Project>
-      <Name>Networking</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SocketPacket\SocketPacket.csproj">
       <Project>{e5b8fdcb-be0f-48bb-a29c-3c5ca0ad4c19}</Project>
       <Name>SocketPacket</Name>
@@ -261,7 +258,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\btnsend.jpg" />
+    <None Include="Resources\btnsend.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\settings.png">
@@ -382,6 +381,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Resources\o.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\sampleavatar.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\x.png">

@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Packet;
-using Networking;
 namespace Client
 {
     public partial class PrivateChat : Form

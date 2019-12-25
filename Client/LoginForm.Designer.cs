@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.lblWelcome = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@
             this.ptbSetting = new System.Windows.Forms.PictureBox();
             this.ptbClose = new System.Windows.Forms.PictureBox();
             this.ptbMinimize = new System.Windows.Forms.PictureBox();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.btnSignUp = new Client.CustomControl.CustomButton();
             this.btnSignIn = new Client.CustomControl.CustomButton();
             this.txbSignUpPassword2 = new Client.CustomControl.CustomLoginTextBox();
@@ -47,6 +49,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ptbSetting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbMinimize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblWelcome
@@ -134,6 +137,9 @@
             this.ptbMinimize.Size = new System.Drawing.Size(24, 24);
             this.ptbMinimize.TabIndex = 3;
             this.ptbMinimize.TabStop = false;
+            this.ptbMinimize.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ptbMinimize_MouseClick);
+            this.ptbMinimize.MouseEnter += new System.EventHandler(this.ptbMinimize_MouseEnter);
+            this.ptbMinimize.MouseLeave += new System.EventHandler(this.ptbMinimize_MouseLeave);
             // 
             // btnSignUp
             // 
@@ -259,6 +265,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ptbSetting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbClose)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptbMinimize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,6 +286,7 @@
         private CustomControl.CustomLoginTextBox txbSignUpPassword2;
         private CustomControl.CustomButton btnSignUp;
         private System.Windows.Forms.PictureBox ptbMinimize;
+        private System.Windows.Forms.BindingSource bindingSource1;
     }
 }
 
