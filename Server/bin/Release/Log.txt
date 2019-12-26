@@ -1,0 +1,8 @@
+[12/26/2019 8:32:41 AM] : System.Net.Sockets.SocketException (0x80004005): A blocking operation was interrupted by a call to WSACancelBlockingCall
+   at System.Net.Sockets.Socket.Accept()
+   at System.Net.Sockets.TcpListener.AcceptTcpClient()
+   at Server.MainForm.TcpReceiveAndRespond() in C:\Users\Admin\source\repos\LanChat\Server\MainForm.cs:line 76
+[12/26/2019 8:32:41 AM] : System.Net.Sockets.SocketException (0x80004005): A blocking operation was interrupted by a call to WSACancelBlockingCall
+   at System.Net.Sockets.Socket.ReceiveFrom(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags, EndPoint& remoteEP)
+   at System.Net.Sockets.UdpClient.Receive(IPEndPoint& remoteEP)
+   at Server.MainForm.ReceiveAndRespond() in C:\Users\Admin\source\repos\LanChat\Server\MainForm.cs:line 55
