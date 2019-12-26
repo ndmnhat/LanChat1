@@ -139,8 +139,8 @@ namespace Client
             for (int i = 0; i < FriendCount; ++i)
             {
                 string[] subsubst = subst[i + 1].Split(':');
-                if (subsubst[1] == name)
-                    continue;
+                //if (subsubst[1] == name)
+                //    continue;
                 Tiles friendtiles = new Tiles();
                 friendtiles.TilesName.Text = subsubst[0];
                 friendtiles.TilesIP = subsubst[1];

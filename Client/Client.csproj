@@ -383,6 +383,7 @@
     <Content Include="Resources\chat.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\minimizeblack.png" />
     <Content Include="Resources\o.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

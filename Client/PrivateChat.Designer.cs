@@ -90,7 +90,7 @@
             // ptbxMinimize
             // 
             this.ptbxMinimize.BackColor = System.Drawing.Color.Transparent;
-            this.ptbxMinimize.BackgroundImage = global::Client.Properties.Resources.minimize;
+            this.ptbxMinimize.BackgroundImage = global::Client.Properties.Resources.minimizeblack;
             this.ptbxMinimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ptbxMinimize.Location = new System.Drawing.Point(513, 0);
             this.ptbxMinimize.Name = "ptbxMinimize";

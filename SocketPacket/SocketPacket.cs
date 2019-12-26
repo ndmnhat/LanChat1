@@ -322,6 +322,7 @@ namespace Packet
         {
             MemoryStream str = new MemoryStream();
             BinaryFormatter bformat = new BinaryFormatter();
+            str.Position = 0;
             bformat.Serialize(str, packet);
             byte[] data = new byte[str.Length];
             data = str.ToArray();
@@ -332,6 +333,7 @@ namespace Packet
             SocketPacket packet = new SocketPacket();
             MemoryStream str = new MemoryStream(data);
             BinaryFormatter binaryFormatter = new BinaryFormatter();
+            str.Position = 0;
             packet = (SocketPacket)binaryFormatter.Deserialize(str);
             return packet;
         }
