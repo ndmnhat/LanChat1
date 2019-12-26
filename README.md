@@ -1,1 +1,1 @@
-# LanChat1
+# LanChat
